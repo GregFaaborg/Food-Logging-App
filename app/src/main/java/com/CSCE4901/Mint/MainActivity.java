@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //TODO Remove this comment just testing git stuff
+        //TODO Remove this comment just testing git stuff more testing git
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
