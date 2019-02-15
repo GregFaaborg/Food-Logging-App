@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1064364436894",
+    "firebase_url": "https://mint-2892b.firebaseio.com",
+    "project_id": "mint-2892b",
+    "storage_bucket": "mint-2892b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1064364436894:android:e26c6de60e2fda49",
+        "android_client_info": {
+          "package_name": "com.CSCE4901.Mint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1064364436894-5ooi1lgeruv8jkniahe8ge7j3quprdv4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.CSCE4901.Mint",
+            "certificate_hash": "bc4857d60d54f29efea4076412145db43d3c92d9"
+          }
+        },
+        {
+          "client_id": "1064364436894-vcvn3bk6vpcgbg71tls7301bul01ekab.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDJZ2HIj_smx0S1o9z6t58AYYfeLA7J72Y"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1064364436894-vcvn3bk6vpcgbg71tls7301bul01ekab.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
