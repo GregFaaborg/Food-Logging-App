@@ -6,30 +6,30 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
 
-    Button button;
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         //TODO Remove this comment just testing git stuff
 
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        button = findViewById(R.id.login);
-
+        Button button = findViewById(R.id.login);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                //switch to overview activity
                 Intent intent = new Intent(MainActivity.this, OverviewActivity.class);
                 startActivity(intent);
                 finish();
             }
         });
-
-
     }
+
+
+
 }
