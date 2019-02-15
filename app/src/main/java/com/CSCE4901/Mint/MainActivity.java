@@ -8,16 +8,20 @@ import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
 
-    Button Button;
+    Button button;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        //TODO Remove this comment just testing git stuff
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button = findViewById(R.id.login_button);
+        button = findViewById(R.id.login_button);
 
-        Button.setOnClickListener(new View.OnClickListener() {
+        button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(MainActivity.this, OverviewActivity.class);
