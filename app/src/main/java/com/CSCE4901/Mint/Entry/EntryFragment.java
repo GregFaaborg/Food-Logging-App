@@ -12,6 +12,9 @@ import com.CSCE4901.Mint.R;
 
 public class EntryFragment extends Fragment {
 
+
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

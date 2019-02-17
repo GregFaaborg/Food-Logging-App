@@ -1,6 +1,7 @@
 package com.CSCE4901.Mint.Search;
 
 
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import static android.content.ContentValues.TAG;
 
 public class SearchFragment extends Fragment {
 
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -27,12 +29,10 @@ public class SearchFragment extends Fragment {
         final SearchView searchView = view.findViewById(R.id.search);
 
 
-
-
-
-        Log.d(TAG, "onCreateView: HERE");
+        //TODO implement recylerview to show search results
 
         /*
+        TODO maybe use spinner for selecting filter options or use radio buttons
         final Spinner spinner = view.findViewById(R.id.search_spinner);
 
 
@@ -43,6 +43,7 @@ public class SearchFragment extends Fragment {
         spinner.setAdapter(arrayAdapter);
 
         */
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,11 +72,9 @@ public class SearchFragment extends Fragment {
         });
 
         Log.d(TAG, "onCreateView: before return view");
+
         return view;
-
-
     }
-
 
 
 }
