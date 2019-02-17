@@ -22,18 +22,28 @@
 
 
     <android.support.v7.widget.SearchView
-        android:layout_margin="5dp"
-        android:paddingStart="@dimen/activity_horizontal_margin"
-        android:paddingEnd="@dimen/activity_horizontal_margin"
         android:id="@+id/search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="8dp"
         android:background="@android:color/white"
-        app:queryHint="Search"
         android:clickable="true"
-        android:focusable="true" />
+        android:focusable="true"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        app:queryHint="Search" />
 
-
-
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/search"
+        android:layout_alignBottom="@+id/search"
+        android:layout_alignEnd="@id/search"
+        android:layout_marginEnd="8dp"
+        android:background="@android:color/white"
+        android:src="@drawable/ic_dots_vertical"
+        android:contentDescription="@string/search_by_button" />
 
 </RelativeLayout>

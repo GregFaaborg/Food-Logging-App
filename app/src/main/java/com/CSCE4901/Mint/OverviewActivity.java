@@ -85,12 +85,18 @@ public class OverviewActivity extends AppCompatActivity {
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        //select Home fragment to be displayed on app startup
-        Fragment launchFragment = new HomeFragment();
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
-                launchFragment).commit();
-        changeActionBarText("Home");
-        navigation.setSelectedItemId(R.id.navigation_home);
+
+        //doing this prevents the fragment from switching to home when device is rotated
+        if (savedInstanceState == null)
+        {
+            //select Home fragment to be displayed on app startup
+            Fragment launchFragment = new HomeFragment();
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    launchFragment).commit();
+            changeActionBarText("Home");
+            navigation.setSelectedItemId(R.id.navigation_home);
+        }
+
 
 
 
