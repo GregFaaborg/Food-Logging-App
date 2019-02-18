@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
@@ -31,7 +30,6 @@ public class OverviewActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-
                     selectedFragment = new HomeFragment();
                     changeActionBarText("Home");
                     Objects.requireNonNull(getSupportActionBar()).show();
