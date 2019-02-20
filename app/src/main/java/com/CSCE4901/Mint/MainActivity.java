@@ -12,9 +12,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         //TODO Remove this comment just testing git stuff more testing git
-        // this is just a test was github
-        // 02/20/2019
-
+    // Test Drive 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
