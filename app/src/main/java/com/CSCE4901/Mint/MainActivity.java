@@ -13,6 +13,7 @@ public class MainActivity extends AppCompatActivity {
 
         //TODO Remove this comment just testing git stuff more testing git
         // this is just a test was github
+        // 02/20/2019
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
