@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1064364436894-v0nk7i9d0lj0p4b3ogbtfl9jrn5vg09n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.CSCE4901.Mint",
+            "certificate_hash": "a78cffd160311682886dca230604191dc1ad4bc6"
+          }
+        },
+        {
           "client_id": "1064364436894-vcvn3bk6vpcgbg71tls7301bul01ekab.apps.googleusercontent.com",
           "client_type": 3
         }
