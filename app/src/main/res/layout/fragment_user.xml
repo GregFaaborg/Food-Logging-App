@@ -1,15 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_purple">
+    android:fillViewport="true">
 
-    <TextView
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/user_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/entry_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name" />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Password:" />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/entry_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/entry_title"
+                    android:hint="User Name:" />
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/entry_description"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/entry_category"
+                    android:gravity="bottom"
+                    android:hint="Email:"
+                   />
+
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/blah"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/entry_description"
+                    android:gravity="bottom"
+                    android:hint="Doctor's email"
+                   />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/update_info"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Info"
-        android:textSize="30sp"
-        android:textColor="#FFFFFF"
-        android:layout_centerInParent="true"/>
+        android:layout_below="@id/user_info"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="131dp"
+        android:layout_marginTop="15dp"
+        android:layout_marginEnd="192dp"
+        android:layout_marginBottom="315dp"
+        android:text="Update" />
+
 
 </RelativeLayout>

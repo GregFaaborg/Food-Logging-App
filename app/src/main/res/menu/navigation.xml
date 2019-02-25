@@ -25,7 +25,7 @@
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="Report" />
+        android:title="Reports" />
 
 
 </menu>
