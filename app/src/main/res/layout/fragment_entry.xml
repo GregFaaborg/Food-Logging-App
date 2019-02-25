@@ -50,6 +50,25 @@
                     android:hint="Description:"
                     android:lines="2" />
 
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/blah"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/entry_description"
+                    android:gravity="bottom"
+                    android:hint="Description:"
+                    android:lines="2" />
+
+
+                <CalendarView
+                    android:id="@+id/entry_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/blah"
+                    android:layout_centerInParent="true"
+                    android:paddingTop="-12dp" />
+
                 <!--
                 Should probably change size of
                 calendar to be smaller to add more text fields
