@@ -1,14 +1,22 @@
 package com.CSCE4901.Mint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputLayout;
+import android.support.v4.content.pm.PackageInfoCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,10 +30,9 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout emailLayout;
     private TextInputLayout passwordLayout;
 
-    private Button loginButton;
-    private Button signUpButton;
-
+    //todo
     private TextView forgotPassword;
+
 
     private FirebaseAuth firebaseAuth;
 
@@ -33,9 +40,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        //TODO Remove this comment just testing git stuff more testing git
-    // Test Drive
-        //test commit
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -44,24 +49,26 @@ public class MainActivity extends AppCompatActivity {
         emailLayout = findViewById(R.id.email_layout);
         passwordLayout = findViewById(R.id.password_layout);
 
-        loginButton = findViewById(R.id.login_button);
-        signUpButton = findViewById(R.id.signup_button);
+        Button loginButton = findViewById(R.id.login_button);
+        Button signUpButton = findViewById(R.id.signup_button);
 
         forgotPassword = findViewById(R.id.forgot_password);
 
-
+        checkPlayServicesVersion();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 validate(v);
-                //launchOverview();
             }
         });
 
         signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),SignUpActivity.class);
+                startActivity(intent);
+                finish();
 
             }
         });
@@ -69,9 +76,9 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateEmail() {
 
-        String email = emailLayout.getEditText().getText().toString();
+        String email = emailLayout.getEditText().getText().toString().trim();
 
-        if(email.isEmpty()){
+        if(email.isEmpty()) {
             emailLayout.setError("Enter your email");
             return false;
         } else {
@@ -82,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validatePassword() {
 
-        String password = passwordLayout.getEditText().getText().toString();
+        String password = passwordLayout.getEditText().getText().toString().trim();
 
         if(password.isEmpty()) {
             passwordLayout.setError("Enter your password");
@@ -99,23 +106,27 @@ public class MainActivity extends AppCompatActivity {
 
         if(!validateEmail() | !validatePassword()){
             return;
-        } else
-        {
+        } else {
 
-            String email = emailLayout.getEditText().getText().toString();
-            String password = passwordLayout.getEditText().getText().toString();
+            final ProgressDialog progressDialog = new ProgressDialog(this);
+            progressDialog.setMessage("Signing in");
+            progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+            progressDialog.show();
+
+            //login user
+            String email = emailLayout.getEditText().getText().toString().trim();
+            String password = passwordLayout.getEditText().getText().toString().trim();
 
             firebaseAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this,
-                                        "Logging In", Toast.LENGTH_SHORT).show();
-
+                                progressDialog.dismiss();
                                 launchOverview();
                             }
                             else {
+                                progressDialog.dismiss();
                                 Toast.makeText(MainActivity.this,
                                         "Authentication Failed", Toast.LENGTH_SHORT).show();
                             }
@@ -126,7 +137,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void launchOverview(){
+    private void launchOverview(){
         Intent intent = new Intent(this,OverviewActivity.class);
         startActivity(intent);
         finish();
@@ -135,9 +146,24 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onStart() {
         super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
+
+        // Check if user is signed in (non-null) if they are launch overview activity
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        if (currentUser != null) {
+            launchOverview();
+        }
     }
 
+    private void checkPlayServicesVersion(){
+
+        final GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        final int status = googleApiAvailability .isGooglePlayServicesAvailable(this);
+        if (status != ConnectionResult.SUCCESS) {
+            //Status that you are interested is SERVICE_VERSION_UPDATE_REQUIRED
+            final Dialog dialog = googleApiAvailability.getErrorDialog(this,status, 1);
+            dialog.show();
+        }
+
+    }
 
 }

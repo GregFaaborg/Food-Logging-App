@@ -33,5 +33,19 @@
     <string name="date">Date</string>
     <string name="description">Description</string>
     <string name="search_by_button">Search by button</string>
+    <string name="name">Name</string>
+    <string name="password">Password:</string>
+    <string name="user_name">User Name:</string>
+    <string name="email">Email:</string>
+    <string name="doctor_email">Doctor\'s email</string>
+    <string name="update_info">Update Info</string>
+    <string name="log_out">Log Out</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="login">Login</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="cancel">Cancel</string>
+    <string name="sign_up">Sign Up</string>
+
 
 </resources>
