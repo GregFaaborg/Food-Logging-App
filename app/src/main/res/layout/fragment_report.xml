@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/holo_blue_bright">
+    android:orientation="vertical"
+    android:background="@android:color/holo_blue_bright" >
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Report"
-        android:textSize="30sp"
-        android:textColor="#000000"
-        android:layout_centerInParent="true"/>
+        android:textSize="40sp"
+        android:textColor="#456135"
+        android:layout_centerInParent="true"
+        android:layout_gravity="center"/>
 
-</RelativeLayout>
+    <Button
+        android:id="@+id/button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Weekly Report"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Monthly Report"
+        android:layout_margin="@dimen/fui_auth_method_button_drawablePadding"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Flags Report"
+        android:layout_margin="@dimen/activity_vertical_margin" />
+
+
+    
+</LinearLayout>
