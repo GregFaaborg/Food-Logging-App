@@ -45,6 +45,8 @@ public class EntryFragment extends Fragment {
     String cat;
     String des;
 
+    String DATE;
+
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
     @Nullable
@@ -53,7 +55,7 @@ public class EntryFragment extends Fragment {
         view=inflater.inflate(R.layout.fragment_entry, container, false); //Connect the XML file with thi fragment
 
         //set format to get the date
-        final SimpleDateFormat DATEformat = new SimpleDateFormat("MM/dd/yyyy");
+        final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
 
         //initialize textviews
         TITLE= view.findViewById(R.id.entry_title);
@@ -71,12 +73,12 @@ public class EntryFragment extends Fragment {
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
 
+        //get the DATE for default data
+        DATE = DATEformat.format(new Date(CAL.getDate()));
+
         SAVE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //get the DATE
-                String DATE = DATEformat.format(new Date(CAL.getDate()));
 
                 //get text field values
                 title = TITLE.getText().toString();
@@ -135,7 +137,22 @@ public class EntryFragment extends Fragment {
                 }
             }
         });
-        
+
+        //when date picker is change set the DATe to that chosen date
+        CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+                int d =dayOfMonth;
+                int m = month+1;
+                int y = year;
+                String D = String.valueOf(d);
+                String M = String.valueOf(m);
+                String Y = String.valueOf(y);
+                DATE=M + "/" + D + "/" + Y;
+
+                Toast.makeText(CAL.getContext(), " "+DATE, Toast.LENGTH_LONG).show();
+            }
+        });
 
        return view;
     }
