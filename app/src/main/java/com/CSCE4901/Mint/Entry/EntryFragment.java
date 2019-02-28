@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +51,9 @@ public class EntryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_entry, container, false); //Connect the XML file with thi fragment
 
+        //set format to get the date
+        final SimpleDateFormat DATEformat = new SimpleDateFormat("MM/dd/yyyy");
+
         //initialize textviews
         TITLE= view.findViewById(R.id.entry_title);
         CAT= view.findViewById(R.id.entry_category);
@@ -69,6 +74,9 @@ public class EntryFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
+                //get the DATE
+                String DATE = DATEformat.format(new Date(CAL.getDate()));
+
                 //get text field values
                 title = TITLE.getText().toString();
                 cat = CAT.getText().toString();
@@ -80,13 +88,14 @@ public class EntryFragment extends Fragment {
                 data.put("category", cat);
                 data.put("description", des);
                 data.put("flag",Flagged );
+                data.put("date", DATE);
 
                 //get email of signed in user
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
 
 
-                //save text views and flag button to database
+                //save text views and flag button to database in user email collection
                 db.collection(UserEmail).add(data)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
@@ -109,16 +118,21 @@ public class EntryFragment extends Fragment {
         FLAG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //make flag button to yellow ALSO MAKE IT TO STAR B4 END OF SPRINT 1
+                //MAKE FLAG BUTTON INTO STAR B4 END OF SPRINT 1
+                //if flag button is not pushed
                 if(Flagged=="0") {
                     Flagged = "1";
                 }
-                if (Flagged=="1")
+                //else if flag button has already been pushed AKA flagged =="1"
+                else
                 {
+                    ////change button color to normal non pushed
                     Flagged="0";
                 }
             }
         });
+
+
 
        return view;
     }
