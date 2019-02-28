@@ -14,6 +14,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,6 +24,11 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -31,6 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     private TextInputLayout tilPassword;
 
     private FirebaseAuth firebaseAuth;
+    private FirebaseFirestore db;
 
     private ProgressDialog progressDialog;
 
@@ -48,10 +56,13 @@ public class SignUpActivity extends AppCompatActivity {
         tilPassword = findViewById(R.id.user_password_layout);
 
         firebaseAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
 
         signUpButton = findViewById(R.id.signup);
         cancelButton = findViewById(R.id.cancel);
 
+
+        //progress for creating account
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Creating Account");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -142,17 +153,44 @@ public class SignUpActivity extends AppCompatActivity {
             String email = tilEmail.getEditText().getText().toString().trim();
             String password = tilPassword.getEditText().getText().toString().trim();
 
+
+
+
             String fullName = firstName + " " + lastName;
-
             createAccount(email, password, fullName);
-
-
         }
 
     }
 
-    private void createAccount(String email, String password, final String fullName) {
+    private void AddUserToDB(String firstName, String lastName, String email){
 
+        //create user entity
+        Map<String, Object> user = new HashMap<>();
+        user.put("firstName", firstName);
+        user.put("lastName", lastName);
+        user.put("email", email);
+        user.put("doctorEmail", "");
+
+        db.collection("users")
+                .add(user)
+                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        Log.d("AddUserToDB Success", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("AddUserToDB Failure", "Error adding document", e);
+                    }
+                });
+    }
+
+    private void createAccount(final String email, String password, final String fullName) {
+
+
+        final String[] splitFullName = fullName.split("\\s+");
 
         progressDialog.show();
 
@@ -178,6 +216,10 @@ public class SignUpActivity extends AppCompatActivity {
                                                     Toast.makeText(SignUpActivity.this,
                                                             "Account Created", Toast.LENGTH_SHORT).show();
                                                     Log.d("User name add", "User profile updated.");
+
+
+                                                    //add first name, last name, and user email to database
+                                                    AddUserToDB(splitFullName[0],splitFullName[1],email);
                                                     launchOverview();
                                                 }
                                             }
