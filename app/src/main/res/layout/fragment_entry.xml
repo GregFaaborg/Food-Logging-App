@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
 
-    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/holo_green_light"
@@ -17,6 +18,7 @@
             android:id="@+id/entry_card"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
             android:layout_marginLeft="6dp"
             android:layout_marginTop="6dp"
             android:layout_marginRight="6dp"
@@ -25,13 +27,18 @@
             <RelativeLayout
                 android:id="@+id/card_layout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="548dp"
                 android:padding="4dp">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/entry_title"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_width="288dp"
+                    android:layout_height="43dp"
+                    android:layout_alignStart="@+id/entry_description"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="-4dp"
+                    android:layout_marginTop="0dp"
+                    android:layout_marginBottom="4dp"
                     android:hint="Title:" />
 
                 <android.support.design.widget.TextInputEditText
@@ -40,6 +47,16 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/entry_title"
                     android:hint="Category:" />
+
+                <Button
+                    android:id="@+id/flag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/entry_category"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="9dp"
+                    android:layout_toEndOf="@+id/entry_title"
+                    android:text="STAR" />
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/entry_description"
@@ -51,24 +68,6 @@
                     android:lines="2" />
 
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/blah"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/entry_description"
-                    android:gravity="bottom"
-                    android:hint="Description:"
-                    android:lines="2" />
-
-
-                <CalendarView
-                    android:id="@+id/entry_calendar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@id/blah"
-                    android:layout_centerInParent="true"
-                    android:paddingTop="-12dp" />
-
                 <!--
                 Should probably change size of
                 calendar to be smaller to add more text fields
@@ -77,18 +76,33 @@
 
              -->
 
+                <CalendarView
+                    android:id="@+id/entry_calendar"
+                    android:layout_width="395dp"
+                    android:layout_height="319dp"
+                    android:layout_below="@+id/entry_description"
+
+                    android:layout_centerVertical="true"
+                    android:theme="@style/CalThemeEntry" /> //this theme changes the date picker aka the little circle that picks the date its in res/values/styles
+
+
+
 
             </RelativeLayout>
         </android.support.design.card.MaterialCardView>
 
 
         <Button
+            android:id="@+id/entry_add_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/entry_card"
             android:layout_alignStart="@+id/entry_card"
             android:layout_alignEnd="@id/entry_card"
+            android:layout_marginStart="-5dp"
             android:layout_marginLeft="-4dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="-3dp"
             android:layout_marginRight="-4dp"
             android:backgroundTint="@color/colorPrimary"
             android:text="Add Entry"

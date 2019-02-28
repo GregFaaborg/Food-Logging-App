@@ -8,4 +8,8 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="CalThemeEntry" parent="@android:style/Widget.CalendarView">
+        <item name="android:textColorPrimaryInverse">#0A0909</item>
+        <item name="android:colorControlActivated">#03A9F4</item>
+    </style>
 </resources>
