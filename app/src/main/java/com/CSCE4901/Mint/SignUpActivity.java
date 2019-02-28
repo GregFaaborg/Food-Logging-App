@@ -154,7 +154,7 @@ public class SignUpActivity extends AppCompatActivity {
             String password = tilPassword.getEditText().getText().toString().trim();
 
 
-            AddUserToDB(firstName,lastName,email);
+
 
             String fullName = firstName + " " + lastName;
             createAccount(email, password, fullName);
@@ -187,8 +187,10 @@ public class SignUpActivity extends AppCompatActivity {
                 });
     }
 
-    private void createAccount(String email, String password, final String fullName) {
+    private void createAccount(final String email, String password, final String fullName) {
 
+
+        final String[] splitFullName = fullName.split("\\s+");
 
         progressDialog.show();
 
@@ -214,6 +216,10 @@ public class SignUpActivity extends AppCompatActivity {
                                                     Toast.makeText(SignUpActivity.this,
                                                             "Account Created", Toast.LENGTH_SHORT).show();
                                                     Log.d("User name add", "User profile updated.");
+
+
+                                                    //add first name, last name, and user email to database
+                                                    AddUserToDB(splitFullName[0],splitFullName[1],email);
                                                     launchOverview();
                                                 }
                                             }
