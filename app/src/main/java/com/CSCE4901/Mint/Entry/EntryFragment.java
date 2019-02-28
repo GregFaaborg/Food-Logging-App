@@ -1,5 +1,6 @@
 package com.CSCE4901.Mint.Entry;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -121,18 +122,20 @@ public class EntryFragment extends Fragment {
                 //MAKE FLAG BUTTON INTO STAR B4 END OF SPRINT 1
                 //if flag button is not pushed
                 if(Flagged=="0") {
+                    //change color to YELLOW
+                    FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
                     Flagged = "1";
                 }
                 //else if flag button has already been pushed AKA flagged =="1"
                 else
                 {
-                    ////change button color to normal non pushed
+                    ////change button color back to normal non pushed
+                    FLAG.setBackgroundColor(Color.parseColor("#696969"));
                     Flagged="0";
                 }
             }
         });
-
-
+        
 
        return view;
     }
