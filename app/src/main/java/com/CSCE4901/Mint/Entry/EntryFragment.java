@@ -33,6 +33,7 @@ public class EntryFragment extends Fragment {
     CalendarView CAL;
 
     String Flagged="0";//default set to false
+    Boolean CHECK = Boolean.FALSE; //not check as default
     String title;
     String cat;
     String des;
@@ -44,24 +45,26 @@ public class EntryFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_entry, container, false); //Connect the XML file with thi fragment
 
-        //initialize textviews
-        TITLE= view.findViewById(R.id.entry_title);
-        title = TITLE.getText().toString();
-        CAT= view.findViewById(R.id.entry_category);
-        cat = CAT.getText().toString();
-        DES=view.findViewById(R.id.entry_description);
-        des = DES.getText().toString();
-        //initialize Buttons
-        FLAG=view.findViewById(R.id.flag);
-        SAVE=view.findViewById(R.id.entry_add_button);
-        //initialize calendar view
-        CAL=view.findViewById(R.id.entry_calendar);
-        //initialize Firebase Auth instance
-        firebaseAuth = FirebaseAuth.getInstance();
+
 
         SAVE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //initialize textviews
+                TITLE= view.findViewById(R.id.entry_title);
+                title = TITLE.getText().toString();
+                CAT= view.findViewById(R.id.entry_category);
+                cat = CAT.getText().toString();
+                DES=view.findViewById(R.id.entry_description);
+                des = DES.getText().toString();
+                //initialize Buttons
+                FLAG=view.findViewById(R.id.flag);
+                SAVE=view.findViewById(R.id.entry_add_button);
+                //initialize calendar view
+                CAL=view.findViewById(R.id.entry_calendar);
+                //initialize Firebase Auth instance
+                firebaseAuth = FirebaseAuth.getInstance();
+
                 //get all the information in a HashMap
                 Map<String, Object> data = new HashMap<>();
                 data.put("title", title);
@@ -72,7 +75,7 @@ public class EntryFragment extends Fragment {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
                 //save text views and flag button to database
-                db.collection(UserEmail).document("first entry").set(data);
+                db.collection(UserEmail).document("TEST").set(data);
             }
         });
 
@@ -80,10 +83,10 @@ public class EntryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 //make flag button to yellow ALSO MAKE IT TO STAR B4 END OF SPRINT 1
-                if(Flagged=="0") {
+                if(CHECK){ //Flagged=="0") {
                     Flagged = "1";
                 }
-                if (Flagged=="1")
+                else//if (Flagged=="1")
                 {
                     Flagged="0";
                 }
