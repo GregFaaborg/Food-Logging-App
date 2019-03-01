@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ public class EntryFragment extends Fragment {
     TextView TITLE;
     TextView CAT;
     TextView DES;
-    Button FLAG;
+    ImageButton FLAG;
     Button SAVE;
     CalendarView CAL;
 
@@ -73,7 +74,7 @@ public class EntryFragment extends Fragment {
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //get the DATE for default data
+        //get the DATE for default date
         DATE = DATEformat.format(new Date(CAL.getDate()));
 
         SAVE.setOnClickListener(new View.OnClickListener() {
@@ -125,14 +126,16 @@ public class EntryFragment extends Fragment {
                 //if flag button is not pushed
                 if(Flagged=="0") {
                     //change color to YELLOW
-                    FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
+                    FLAG.setColorFilter(Color.parseColor("#CCCC00"));
+                    //FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
                     Flagged = "1";
                 }
                 //else if flag button has already been pushed AKA flagged =="1"
                 else
                 {
-                    ////change button color back to normal non pushed
-                    FLAG.setBackgroundColor(Color.parseColor("#696969"));
+                    //change button color back to normal non pushed
+                    FLAG.setColorFilter(Color.parseColor("#696969"));
+                    //FLAG.setBackgroundColor(Color.parseColor("#696969"));
                     Flagged="0";
                 }
             }
