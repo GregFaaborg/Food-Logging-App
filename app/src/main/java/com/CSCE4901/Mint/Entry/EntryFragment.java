@@ -122,7 +122,7 @@ public class EntryFragment extends Fragment {
         FLAG.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //MAKE FLAG BUTTON INTO STAR B4 END OF SPRINT 1
+
                 //if flag button is not pushed
                 if(Flagged=="0") {
                     //change color to YELLOW

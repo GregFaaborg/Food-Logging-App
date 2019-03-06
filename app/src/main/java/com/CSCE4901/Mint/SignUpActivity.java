@@ -170,13 +170,13 @@ public class SignUpActivity extends AppCompatActivity {
         user.put("doctorEmail", "");
 
 
-
         db.collection("users")
                 .add(user)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d("AddUserToDB Success", "DocumentSnapshot added with ID: " + documentReference.getId());
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

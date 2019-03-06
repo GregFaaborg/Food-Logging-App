@@ -2,39 +2,38 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@android:color/holo_blue_bright" >
+    android:background="#ffff"
+    android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Report"
-        android:textSize="40sp"
-        android:textColor="#456135"
-        android:layout_centerInParent="true"
-        android:layout_gravity="center"/>
 
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Weekly Report"
         android:layout_margin="@dimen/activity_vertical_margin"
-        />
+        android:background="@color/colorPrimaryDark"
+        android:text="Weekly Report"
+        android:textAlignment="center"
+        android:textColor="#ffff" />
 
     <Button
         android:id="@+id/button2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/fui_auth_method_button_drawablePadding"
+        android:background="@color/colorPrimaryDark"
         android:text="Monthly Report"
-        android:layout_margin="@dimen/fui_auth_method_button_drawablePadding"/>
+        android:textAlignment="center"
+        android:textColor="#ffff" />
 
     <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:background="@color/colorPrimaryDark"
         android:text="Flags Report"
-        android:layout_margin="@dimen/activity_vertical_margin" />
+        android:textAlignment="center"
+        android:textColor="#ffff" />
 
 
-    
 </LinearLayout>

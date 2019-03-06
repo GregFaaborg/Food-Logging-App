@@ -58,8 +58,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
-        android:background="@android:color/holo_red_light"
+        android:background="@color/colorPrimaryDark"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="#ffff"
         android:text="@string/log_out"
         />
 

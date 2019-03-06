@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@android:color/holo_orange_light">
+    android:background="@color/colorPrimary"
+    >
 
     <TextView
         android:layout_width="wrap_content"
@@ -18,7 +19,8 @@
         android:id="@+id/search_results"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/search"/>
+        android:layout_below="@+id/search"
+        android:background="#ffff"/>
 
 
     <android.support.v7.widget.SearchView
@@ -28,12 +30,13 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentEnd="true"
         android:layout_margin="8dp"
-        android:background="@android:color/white"
+        android:background="#ffff"
         android:clickable="true"
         android:focusable="true"
         android:paddingStart="@dimen/activity_horizontal_margin"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        app:queryHint="Search" />
+        app:queryHint="Search"
+        />
 
     <ImageButton
         android:id="@+id/option_button"
