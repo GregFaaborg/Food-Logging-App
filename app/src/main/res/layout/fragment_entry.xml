@@ -93,11 +93,11 @@
 
                 <CalendarView
                     android:id="@+id/entry_calendar"
-                    android:layout_width="395dp"
-                    android:layout_height="319dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_below="@+id/entry_description"
-
-                    android:layout_centerVertical="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="-12dp"
                     android:theme="@style/CalThemeEntry" /> //this theme changes the date picker aka the little circle that picks the date its in res/values/styles
 
 
