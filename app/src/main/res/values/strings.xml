@@ -46,6 +46,7 @@
     <string name="last_name">Last Name</string>
     <string name="cancel">Cancel</string>
     <string name="sign_up">Sign Up</string>
+    <string name="email_password_reset">Email Password Reset</string>
 
 
 </resources>

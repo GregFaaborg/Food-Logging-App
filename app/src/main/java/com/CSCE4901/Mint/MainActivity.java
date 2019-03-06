@@ -72,6 +72,15 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+        forgotPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
+                startActivity(intent);
+            }
+        });
+
     }
 
     private boolean validateEmail() {
