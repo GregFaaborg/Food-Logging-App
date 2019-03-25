@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.support.v7.widget.AppCompatTextView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import android.widget.DatePicker;
 import android.widget.Toast;
 
 
+import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
 import com.google.type.DayOfWeek;
 
@@ -32,6 +34,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
+
+import com.whiteelephant.monthpicker.MonthPickerDialog;
+
 
 
 public class ReportFragment extends Fragment{
@@ -81,7 +86,7 @@ public class ReportFragment extends Fragment{
         monthly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                monthPicker();
             }
         });
 
@@ -132,6 +137,23 @@ public class ReportFragment extends Fragment{
         //Printing Week range
         Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
 
+    }
+
+
+    private void monthPicker() {
+        final Calendar today = Calendar.getInstance();
+
+        MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(), new MonthPickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(int selectedMonth, int selectedYear) {
+                Log.d("Month Picker", "selectedMonth : " + selectedMonth + " selectedYear : " + selectedYear);
+                Toast.makeText(getContext(), "Date set with month " + selectedMonth  + " year " + selectedYear, Toast.LENGTH_SHORT).show();
+            }
+        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+
+        builder.setTitle("Select Month and Year for Report")
+                .build()
+                .show();
     }
 
 
