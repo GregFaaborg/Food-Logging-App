@@ -49,8 +49,7 @@ public class ReportFragment extends Fragment{
     }
 
     public static ReportFragment newInstance() {
-        ReportFragment fragment = new ReportFragment();
-        return fragment;
+        return new ReportFragment();
     }
 
     @Override
@@ -92,40 +91,42 @@ public class ReportFragment extends Fragment{
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             // get date from string
             String selectedDate = data.getStringExtra("selectedDate");
-            // set the value of the editText
-            //dateOfBirthET.setText(selectedDate);
 
-            SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-
-            Date date;
-            Calendar cal = Calendar.getInstance();
-
-            try {
-
-                //parse selected date and set date to that
-                date = sdf.parse(selectedDate);
-                cal.setTime(date);
-
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-
-            //set date to sunday (minimum day of week)
-            cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
-
-            //getting first day of week
-            Date firstDay = cal.getTime();
-            String firstDayOfWeek = sdf.format(firstDay);
-
-            //Add 6 days to first day of week to get last day
-            cal.add(Calendar.DAY_OF_WEEK, 6);
-            String lastDayOfWeek= sdf.format(cal.getTime());
-
-
-            //Printing Week range
-            Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
-
-
+            getWeekRange(selectedDate);
         }
+    }
+
+    private void getWeekRange(String selectedDate) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+
+        Date date;
+        Calendar cal = Calendar.getInstance();
+
+        try {
+
+            //parse selected date and set date to that
+            date = sdf.parse(selectedDate);
+            cal.setTime(date);
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        //set date to sunday (minimum day of week)
+        cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
+
+        //getting first day of week
+        Date firstDay = cal.getTime();
+        String firstDayOfWeek = sdf.format(firstDay);
+
+        //Add 6 days to first day of week to get last day
+        cal.add(Calendar.DAY_OF_WEEK, 6);
+        String lastDayOfWeek= sdf.format(cal.getTime());
+
+
+        //Printing Week range
+        Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
+
     }
 }
