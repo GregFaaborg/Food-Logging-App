@@ -48,9 +48,6 @@ public class ReportFragment extends Fragment{
         // Required empty public constructor
     }
 
-    public static ReportFragment newInstance() {
-        return new ReportFragment();
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +74,13 @@ public class ReportFragment extends Fragment{
 
                 appCompatDialogFragment.setTargetFragment(ReportFragment.this, REQUEST_CODE);
                 appCompatDialogFragment.show(fragmentManager,"Select Week");
+
+            }
+        });
+
+        monthly.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });
@@ -129,4 +133,6 @@ public class ReportFragment extends Fragment{
         Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
 
     }
+
+
 }
