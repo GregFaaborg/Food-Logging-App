@@ -47,6 +47,8 @@
     <string name="cancel">Cancel</string>
     <string name="sign_up">Sign Up</string>
     <string name="email_password_reset">Email Password Reset</string>
+    <string name="firstname">FirstName:</string>
+    <string name="lastname">LastName</string>
 
 
 </resources>
