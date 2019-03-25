@@ -25,6 +25,13 @@ import android.widget.Toast;
 
 import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.type.DayOfWeek;
 
 import java.text.DateFormat;
@@ -47,6 +54,8 @@ public class ReportFragment extends Fragment{
     Button monthly;
     Button favorites;
 
+    FirebaseFirestore db;
+
     public static final int REQUEST_CODE = 1;  // Used to identify the result
 
     public ReportFragment() {
@@ -63,6 +72,10 @@ public class ReportFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_report, container, false);
+
+
+        //get instance of firestore database
+        db = FirebaseFirestore.getInstance();
 
         final FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
 
@@ -87,6 +100,14 @@ public class ReportFragment extends Fragment{
             @Override
             public void onClick(View v) {
                 monthPicker();
+            }
+        });
+
+
+        favorites.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getFavorites();
             }
         });
 
@@ -156,5 +177,39 @@ public class ReportFragment extends Fragment{
                 .show();
     }
 
+    private String getUserEmail(){
+        FirebaseAuth mAuth;
+        mAuth = FirebaseAuth.getInstance();
+        FirebaseUser user =  mAuth.getCurrentUser();
+
+        if(user != null) {
+            String email = user.getEmail();
+            return email;
+        }
+
+        return null;
+    }
+
+    private void getFavorites() {
+
+        String email = getUserEmail();
+        db.collection(email)
+                .whereEqualTo("flag", "1")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: task.getResult()) {
+
+                                Log.d("Favorites", document.getId() + " => " + document.getData());
+                            }
+                        }
+                        else {
+                            Log.d("Favorites", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+    }
 
 }
