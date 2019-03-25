@@ -69,20 +69,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
             return result;
         }
 
-        private void writeNewPost(String FirstName, String Lastname, String Email, String DoctorsEmail) {
-            // Create new post at /user-posts/$Email/$postid and at
-            // /posts/$postid simultaneously//
-            String key = mDatabase.child("posts").push().getKey();
-            Post post = new Post(FirstName, Lastname, Email, DoctorsEmail);
-            Map<String, Object> postValues = post.toMap();
-
-            Map<String, Object> childUpdates = new HashMap<>();
-            childUpdates.put("/posts/" + key, postValues);
-            childUpdates.put("/user-posts/" + Email + "/" + key, postValues);
-
-            mDatabase.updateChild(childUpdates);
-
-        }
 
     }
 

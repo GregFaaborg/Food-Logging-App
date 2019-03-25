@@ -128,7 +128,7 @@ public class ReportFragment extends Fragment{
 
     private void getWeekRange(String selectedDate) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
+        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.US);
 
         Date date;
         Calendar cal = Calendar.getInstance();
@@ -158,19 +158,81 @@ public class ReportFragment extends Fragment{
         //Printing Week range
         Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
 
+
+
+        String email = getUserEmail();
+        db.collection(email)
+                .whereGreaterThanOrEqualTo("date", firstDayOfWeek)
+                .whereLessThanOrEqualTo("date", lastDayOfWeek)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
+
+                                Log.d("Week", document.getId() + " => " + document.getData());
+                            }
+                        }
+                        else {
+                            Log.d("Week", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
     }
 
 
     private void monthPicker() {
-        final Calendar today = Calendar.getInstance();
+        final Calendar date = Calendar.getInstance();
 
         MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(), new MonthPickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(int selectedMonth, int selectedYear) {
+
                 Log.d("Month Picker", "selectedMonth : " + selectedMonth + " selectedYear : " + selectedYear);
-                Toast.makeText(getContext(), "Date set with month " + selectedMonth  + " year " + selectedYear, Toast.LENGTH_SHORT).show();
+
+
+                SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.US);
+
+                date.set(selectedYear,selectedMonth,1);
+
+                //get first day of month
+                date.set(Calendar.DAY_OF_MONTH, date.getActualMinimum(Calendar.DAY_OF_MONTH));
+                String firstDayOfMonth = sdf.format(date.getTime());
+
+                //get last day of month
+                date.set(Calendar.DAY_OF_MONTH, date.getActualMaximum(Calendar.DAY_OF_MONTH));
+                String lastDayOfMonth = sdf.format(date.getTime());
+
+                Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
+
+                String email = getUserEmail();
+                db.collection(email)
+                        .whereGreaterThanOrEqualTo("date", firstDayOfMonth)
+                        .whereLessThanOrEqualTo("date", lastDayOfMonth)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                if(task.isSuccessful()) {
+                                    for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
+
+                                        Log.d("Month", document.getId() + " => " + document.getData());
+                                    }
+                                }
+                                else {
+                                    Log.d("Month", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+
+
+
+
             }
-        }, today.get(Calendar.YEAR), today.get(Calendar.MONTH));
+        }, date.get(Calendar.YEAR), date.get(Calendar.MONTH));
 
         builder.setTitle("Select Month and Year for Report")
                 .build()
@@ -200,7 +262,7 @@ public class ReportFragment extends Fragment{
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if(task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document: task.getResult()) {
+                            for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
                                 Log.d("Favorites", document.getId() + " => " + document.getData());
                             }
