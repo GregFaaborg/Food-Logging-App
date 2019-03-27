@@ -32,8 +32,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
     //get email of signed in user
-    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-    String Email = currentUser.getEmail();
+   // FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    //String Email = currentUser.getEmail();
 
     @IgnoreExtraProperties
     public class Post {

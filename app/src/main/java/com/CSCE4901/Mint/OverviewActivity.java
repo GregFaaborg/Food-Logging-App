@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
@@ -31,32 +32,22 @@ public class OverviewActivity extends AppCompatActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
                     selectedFragment = new HomeFragment();
-                    changeActionBarText("Home");
-                    Objects.requireNonNull(getSupportActionBar()).show();
+
                     break;
                 case R.id.navigation_report:
                     selectedFragment = new ReportFragment();
-                    changeActionBarText("Report");
-                    Objects.requireNonNull(getSupportActionBar()).show();
                     break;
 
                 case R.id.navigation_entry:
                     selectedFragment = new EntryFragment();
-                    changeActionBarText("Create Entry");
-                    Objects.requireNonNull(getSupportActionBar()).show();
                     break;
 
                 case R.id.navigation_search:
                     selectedFragment = new SearchFragment();
-                    changeActionBarText("Search");
-                    Objects.requireNonNull(getSupportActionBar()).setShowHideAnimationEnabled(false);
-                    getSupportActionBar().hide();
                     break;
 
                 case R.id.navigation_user:
                     selectedFragment = new UserFragment();
-                    changeActionBarText("User Info");
-                    Objects.requireNonNull(getSupportActionBar()).show();
                     break;
 
             }
@@ -68,11 +59,6 @@ public class OverviewActivity extends AppCompatActivity {
         }
     };
 
-    public void changeActionBarText(String text){
-        Objects.requireNonNull(getSupportActionBar()).setTitle(text);
-    }
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,9 +66,13 @@ public class OverviewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_overview);
 
 
+
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
+        actionBar.hide();
 
         //doing this prevents the fragment from switching to home when device is rotated
         if (savedInstanceState == null)
@@ -91,7 +81,6 @@ public class OverviewActivity extends AppCompatActivity {
             Fragment launchFragment = new HomeFragment();
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     launchFragment).commit();
-            changeActionBarText("Home");
             navigation.setSelectedItemId(R.id.navigation_home);
         }
 
