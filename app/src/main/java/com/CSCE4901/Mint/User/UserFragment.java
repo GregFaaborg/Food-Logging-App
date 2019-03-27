@@ -117,6 +117,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 FIRST=first.getText().toString();
                 LAST=last.getText().toString();
                 docEMAIL=docEmail.getText().toString();
+                //TOOOOO DOOOO
+                //check if docEmail is valid in firebase auth
+
 
                 //get all the information in a HashMap
                 Map<String, Object> data = new HashMap<>();
@@ -126,6 +129,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 data.put("doctorEmail",docEMAIL);
 
                 db.collection("users").document(email).set(data);
+                //TOOOOO DOOOOO
+                //do the firebase auth email change
 
         }
 
