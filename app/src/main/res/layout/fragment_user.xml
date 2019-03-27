@@ -13,7 +13,19 @@
                 android:id="@+id/entry_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/name" />
+                android:hint="@string/firstname" />
+
+            <android.support.design.widget.TextInputEditText
+                android:id="@+id/entry_category"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/lastname" />
+             <android.support.design.widget.TextInputEditText
+                 android:id="@+id/entry_description"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:gravity="bottom"
+                 android:hint="@string/email" />
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/password"
@@ -21,19 +33,9 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password" />
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/entry_category"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/user_name" />
 
-            <android.support.design.widget.TextInputEditText
-                android:id="@+id/entry_description"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="bottom"
-                android:hint="@string/email"
-               />
+
+
 
 
             <android.support.design.widget.TextInputEditText

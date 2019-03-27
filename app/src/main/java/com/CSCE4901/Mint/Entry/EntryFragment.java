@@ -156,8 +156,6 @@ public class EntryFragment extends Fragment {
                 String M = String.valueOf(m);
                 String Y = String.valueOf(y);
                 DATE=M + "/" + D + "/" + Y;
-
-                Toast.makeText(CAL.getContext(), " "+DATE, Toast.LENGTH_LONG).show();
             }
         });
 

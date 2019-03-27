@@ -7,33 +7,34 @@
 
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/weekly_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_margin="12dp"
         android:background="@color/colorPrimaryDark"
         android:text="Weekly Report"
         android:textAlignment="center"
-        android:textColor="#ffff" />
+        android:textColor="#fff" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/monthly_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/fui_auth_method_button_drawablePadding"
+        android:layout_margin="12dp"
         android:background="@color/colorPrimaryDark"
         android:text="Monthly Report"
         android:textAlignment="center"
-        android:textColor="#ffff" />
+        android:textColor="#fff" />
 
     <Button
+        android:id="@+id/favorites_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_margin="12dp"
         android:background="@color/colorPrimaryDark"
-        android:text="Flags Report"
+        android:text="Favorites Report"
         android:textAlignment="center"
-        android:textColor="#ffff" />
+        android:textColor="#fff" />
 
 
 </LinearLayout>

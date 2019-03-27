@@ -15,12 +15,62 @@ import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.Exclude;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.IgnoreExtraProperties;
+
+import java.sql.DatabaseMetaData;
+import java.util.HashMap;
+import java.util.Map;
 
 public class UserFragment extends Fragment implements View.OnClickListener {
 
     View view;
     Button logOutButton;
 
+    FirebaseAuth firebaseAuth;
+    FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
+
+    //get email of signed in user
+    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+    String Email = currentUser.getEmail();
+
+    @IgnoreExtraProperties
+    public class Post {
+
+        public String FirstName;
+        public String Lastname;
+        public String Email;
+        public String DoctorsEmail;
+
+        DatabaseMetaData mDatabase;
+
+
+        public int starCount = 0;
+        Map<String, Boolean> stars = new HashMap<>();
+
+
+        public Post(String firstName, String lastName, String doctorsEmail, String email) {
+            this.FirstName = firstName;
+            this.Lastname = lastName;
+            this.DoctorsEmail = doctorsEmail;
+            this.Email = email;
+        }
+        @Exclude
+        public Map<String, Object> toMap() {
+            HashMap<String, Object> result = new HashMap<>();
+            result.put("firstName", FirstName);
+            result.put("lastName", Lastname);
+            result.put("email", Email);
+            result.put("doctorsEmail", DoctorsEmail);
+            result.put("starCount", starCount);
+            result.put("stars", stars);
+
+            return result;
+        }
+
+
+    }
 
     @Nullable
     @Override
