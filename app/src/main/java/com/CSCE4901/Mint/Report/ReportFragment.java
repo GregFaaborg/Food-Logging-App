@@ -158,34 +158,15 @@ public class ReportFragment extends Fragment{
         //Printing Week range
         Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
 
-
-
-        String email = getUserEmail();
-        db.collection(email)
-                .whereGreaterThanOrEqualTo("date", firstDayOfWeek)
-                .whereLessThanOrEqualTo("date", lastDayOfWeek)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if(task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
-
-                                Log.d("Week", document.getId() + " => " + document.getData());
-                            }
-                        }
-                        else {
-                            Log.d("Week", "Error getting documents: ", task.getException());
-                        }
-                    }
-                });
-
-
+        dateRangeQuery(firstDayOfWeek, lastDayOfWeek);
     }
 
 
     private void monthPicker() {
         final Calendar date = Calendar.getInstance();
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH);
+
 
         MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(), new MonthPickerDialog.OnDateSetListener() {
             @Override
@@ -208,35 +189,44 @@ public class ReportFragment extends Fragment{
 
                 Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
 
-                String email = getUserEmail();
-                db.collection(email)
-                        .whereGreaterThanOrEqualTo("date", firstDayOfMonth)
-                        .whereLessThanOrEqualTo("date", lastDayOfMonth)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if(task.isSuccessful()) {
-                                    for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
-
-                                        Log.d("Month", document.getId() + " => " + document.getData());
-                                    }
-                                }
-                                else {
-                                    Log.d("Month", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-
-
-
+                dateRangeQuery(firstDayOfMonth, lastDayOfMonth);
 
             }
         }, date.get(Calendar.YEAR), date.get(Calendar.MONTH));
 
         builder.setTitle("Select Month and Year for Report")
+                .setMaxMonth(month)
+                .setMaxYear(year)
                 .build()
                 .show();
+    }
+
+    private void dateRangeQuery(String begin, String end){
+
+        String email = getUserEmail();
+        db.collection(email)
+                .whereGreaterThanOrEqualTo("date", begin)
+                .whereLessThanOrEqualTo("date", end)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if(task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
+
+                                Log.d("Month", document.getId() + " => " + document.getData());
+                            }
+                        }
+                        else {
+                            Log.d("Month", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
+
+
+
+
+
     }
 
     private String getUserEmail(){
