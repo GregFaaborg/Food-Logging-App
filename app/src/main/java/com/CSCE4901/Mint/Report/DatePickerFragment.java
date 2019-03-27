@@ -29,9 +29,9 @@ public class DatePickerFragment extends AppCompatDialogFragment implements DateP
         int day = c.get(Calendar.DAY_OF_MONTH);
 
         // Return a new instance of DatePickerDialog
-        Dialog dialog = new DatePickerDialog(getActivity(), DatePickerFragment.this, year, month, day);
+        DatePickerDialog dialog = new DatePickerDialog(getActivity(), DatePickerFragment.this, year, month, day);
 
-        ((DatePickerDialog) dialog).getDatePicker().setMaxDate(new Date().getTime());
+        dialog.getDatePicker().setMaxDate(new Date().getTime());
         return dialog;
     }
 
