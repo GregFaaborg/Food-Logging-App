@@ -31,9 +31,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     public void onBindViewHolder(SearchViewHolder holder, final int position) {
 
         //get item and concatenize with their appropriate option
-        holder.mTitle.setText(mItems.get(position).title);
-        holder.mDescription.setText(mItems.get(position).description);
-        holder.mDate.setText(mItems.get(position).date);
+        String titleHolder="Title: "+mItems.get(position).title;
+        holder.mTitle.setText(titleHolder);//holder.mTitle.setText(mItems.get(position).title);
+
+        //holder.mCat.setText(mItems.get(position).category);
+        String catHolder="Category: "+mItems.get(position).category;
+        holder.mCat.setText(catHolder);
+
+        String desHolder="Description: "+mItems.get(position).description;
+        holder.mDescription.setText(desHolder);
+
+        String dateHolder="Date: "+mItems.get(position).date;
+        holder.mDate.setText(dateHolder);
 
         String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
 
