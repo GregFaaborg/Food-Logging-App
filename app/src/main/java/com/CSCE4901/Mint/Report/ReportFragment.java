@@ -164,6 +164,9 @@ public class ReportFragment extends Fragment{
 
     private void monthPicker() {
         final Calendar date = Calendar.getInstance();
+        int year = date.get(Calendar.YEAR);
+        int month = date.get(Calendar.MONTH);
+
 
         MonthPickerDialog.Builder builder = new MonthPickerDialog.Builder(getActivity(), new MonthPickerDialog.OnDateSetListener() {
             @Override
@@ -192,6 +195,8 @@ public class ReportFragment extends Fragment{
         }, date.get(Calendar.YEAR), date.get(Calendar.MONTH));
 
         builder.setTitle("Select Month and Year for Report")
+                .setMaxMonth(month)
+                .setMaxYear(year)
                 .build()
                 .show();
     }
