@@ -16,14 +16,14 @@
 
 
         <RelativeLayout
-            android:layout_width="428dp"
-            android:layout_height="146dp"
+            android:layout_width="437dp"
+            android:layout_height="match_parent"
             android:padding="@dimen/activity_horizontal_margin">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="290dp"
-                android:layout_height="43dp"
+                android:layout_height="wrap_content"
                 android:layout_marginEnd="77dp"
                 android:layout_toStartOf="@+id/options"
                 android:text="@string/title"
@@ -42,12 +42,10 @@
 
             <TextView
                 android:id="@+id/description"
-                android:layout_width="392dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/date"
-                android:layout_alignParentBottom="true"
-                android:layout_marginTop="-1dp"
-                android:layout_marginBottom="0dp"
+                android:layout_below="@+id/cat"
+                android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:text="@string/description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
@@ -55,21 +53,33 @@
 
             <TextView
                 android:id="@+id/options"
-                android:layout_width="wrap_content"
+                android:layout_width="57dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="49dp"
                 android:paddingStart="@dimen/activity_horizontal_margin"
                 android:paddingEnd="@dimen/activity_horizontal_margin"
                 android:text="@string/_8942"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large"
                 android:textSize="25sp" />
 
+            <TextView
+                android:id="@+id/cat"
+                android:layout_width="398dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_alignStart="@+id/date"
+                android:layout_marginStart="2dp"
+                android:layout_marginTop="41dp"
+                android:text="Category"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+
             <ImageView
                 android:id="@+id/flag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="24dp"
+                android:layout_marginEnd="4dp"
                 android:layout_toStartOf="@+id/options"
                 app:srcCompat="@drawable/star1" />
 

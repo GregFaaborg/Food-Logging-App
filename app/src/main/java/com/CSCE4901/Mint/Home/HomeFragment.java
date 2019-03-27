@@ -110,7 +110,7 @@ public class HomeFragment extends Fragment {
                 String M = String.valueOf(m);
                 String Y = String.valueOf(y);
                 pickedDate=M + "/" + D + "/" + Y;
-                displayPickedDate = DATEformat2.format(new Date(year,month, dayOfMonth));//displayPickedDate = M+","+D+","+Y;
+                displayPickedDate = DATEformat2.format(new Date(year-1900,month, dayOfMonth));//displayPickedDate = M+","+D+","+Y;
                 displayDATE.setText(displayPickedDate);
                 //Toast.makeText(CAL.getContext(), " "+pickedDate, Toast.LENGTH_LONG).show();
 
