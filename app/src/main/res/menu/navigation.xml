@@ -3,8 +3,8 @@
 
     <item
         android:id="@+id/navigation_home"
-        android:icon="@drawable/ic_home_black_24dp"
-        android:title="Home" />
+        android:icon="@drawable/ic_date_range_black_24dp"
+        android:title="Calendar" />
 
     <item
         android:id="@+id/navigation_report"
@@ -25,7 +25,7 @@
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="Reports" />
+        android:title="User Info" />
 
 
 </menu>
