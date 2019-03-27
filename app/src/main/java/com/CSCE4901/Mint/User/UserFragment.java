@@ -117,7 +117,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 FIRST=first.getText().toString();
                 LAST=last.getText().toString();
                 docEMAIL=docEmail.getText().toString();
-                //TOOOOO DOOOO
+                //TOOOOO DOOOOO
                 //check if docEmail is valid in firebase auth
 
 
