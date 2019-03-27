@@ -30,6 +30,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     @Override
     public void onBindViewHolder(SearchViewHolder holder, final int position) {
 
+        //get item and concatenize with their appropriate option
         holder.mTitle.setText(mItems.get(position).title);
         holder.mDescription.setText(mItems.get(position).description);
         holder.mDate.setText(mItems.get(position).date);
