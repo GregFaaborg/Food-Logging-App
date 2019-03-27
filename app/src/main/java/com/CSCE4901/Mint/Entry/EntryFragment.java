@@ -116,6 +116,10 @@ public class EntryFragment extends Fragment {
                                 Log.d("CREATE ENTRY", "OnFailure" ,e);
                             }
                         });
+                //clear out edit texts
+                TITLE.setText("");
+                CAT.setText("");
+                DES.setText("");
             }
         });
 

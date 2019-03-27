@@ -1,6 +1,7 @@
 package com.CSCE4901.Mint.Search;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -32,6 +33,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         holder.mTitle.setText(mItems.get(position).title);
         holder.mDescription.setText(mItems.get(position).description);
         holder.mDate.setText(mItems.get(position).date);
+
+        String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
+
+        //Toast.makeText(mContext, FlagHolder, Toast.LENGTH_SHORT).show();
+
+        if(FlagHolder.equals("1")) {
+            //MAKE FLAG STAR YELLOW
+            holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
+        }
+        else {
+            //MAKE FLAG STAR TO NORMAL DEFAULT COLOR
+            holder.mFlag.setColorFilter(Color.parseColor("#696969"));
+        }
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
