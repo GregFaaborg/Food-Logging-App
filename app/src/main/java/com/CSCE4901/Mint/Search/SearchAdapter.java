@@ -38,7 +38,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         String catHolder="Category: "+mItems.get(position).category;
         holder.mCat.setText(catHolder);
 
-        String desHolder="Description: "+mItems.get(position).description;
+        String desHolder="Description:\n"+mItems.get(position).description;
         holder.mDescription.setText(desHolder);
 
         String dateHolder="Date: "+mItems.get(position).date;

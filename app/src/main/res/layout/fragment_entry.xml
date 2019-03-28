@@ -79,8 +79,8 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/entry_category"
                     android:gravity="bottom"
+                    android:layout_gravity="fill"
                     android:hint="Description:"
-                    android:lines="4"
                     android:selectAllOnFocus="false"
                     android:singleLine="false" />
 

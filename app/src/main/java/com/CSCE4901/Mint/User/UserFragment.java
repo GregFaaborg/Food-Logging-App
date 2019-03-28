@@ -61,6 +61,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         email = currentUser.getEmail();
 
+
         //create a doc reference in the user collection to the email doc
         DocumentReference userInfo = db.collection("users").document(email);
         userInfo.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
