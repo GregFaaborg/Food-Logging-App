@@ -160,7 +160,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     }
 
-    private void AddUserToDB(String firstName, String lastName, String email){
+    private void AddUserToDB(String firstName, String lastName, final String email){
 
         //create user entity
         Map<String, Object> user = new HashMap<>();
@@ -170,12 +170,12 @@ public class SignUpActivity extends AppCompatActivity {
         user.put("doctorEmail", "");
 
 
-        db.collection("users")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("users").document(email)
+                .set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d("AddUserToDB Success", "DocumentSnapshot added with ID: " + documentReference.getId());
+                    public void onSuccess(Void aVoid) {
+                        Log.d("AddUserToDB Success", "With document id " + email);
 
                     }
                 })

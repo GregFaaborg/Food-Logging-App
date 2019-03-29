@@ -10,18 +10,19 @@
 
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/entry_name"
+                android:id="@+id/first"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/firstname" />
+                android:hint="first name" />
 
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/entry_category"
+                android:id="@+id/last"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/lastname" />
+                android:hint="last name" />
+
              <android.support.design.widget.TextInputEditText
-                 android:id="@+id/entry_description"
+                 android:id="@+id/email"
                  android:layout_width="match_parent"
                  android:layout_height="wrap_content"
                  android:gravity="bottom"
@@ -33,13 +34,8 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/password" />
 
-
-
-
-
-
             <android.support.design.widget.TextInputEditText
-                android:id="@+id/blah"
+                android:id="@+id/doc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
