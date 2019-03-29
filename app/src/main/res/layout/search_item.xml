@@ -34,7 +34,6 @@
                 android:layout_width="270dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
-                android:layout_alignStart="@+id/date"
                 android:layout_marginStart="0dp"
                 android:layout_marginTop="6dp"
                 android:text="@string/date"
@@ -44,7 +43,7 @@
                 android:id="@+id/description"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/category"
+                android:layout_below="@+id/cat"
                 android:layout_marginTop="8dp"
                 android:ellipsize="end"
                 android:text="@string/description"
@@ -64,7 +63,7 @@
                 android:textSize="25sp" />
 
             <TextView
-                android:id="@+id/category"
+                android:id="@+id/cat"
                 android:layout_width="398dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
