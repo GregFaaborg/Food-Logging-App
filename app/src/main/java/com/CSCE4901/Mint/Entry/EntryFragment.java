@@ -9,9 +9,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,14 +31,17 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntryFragment extends Fragment {
+public class EntryFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //declare
     FirebaseAuth firebaseAuth;
 
     View view;
     TextView TITLE;
-    TextView CAT;
+
+    TextView catText;
+    Spinner CAT;
+
     TextView DES;
     ImageButton FLAG;
     Button SAVE;
@@ -58,10 +64,21 @@ public class EntryFragment extends Fragment {
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
 
-        //initialize textviews
+        //initialize edittext
         TITLE= view.findViewById(R.id.entry_title);
-        CAT= view.findViewById(R.id.entry_category);
         DES=view.findViewById(R.id.entry_description);
+
+        //initialize textview
+        catText = view.findViewById(R.id.entry_category_text);
+
+
+        //initialize spinner
+        CAT= view.findViewById(R.id.entry_category);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.categories, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CAT.setAdapter(arrayAdapter);
+        CAT.setOnItemSelectedListener(this);
 
 
         //initialize Buttons
@@ -83,7 +100,7 @@ public class EntryFragment extends Fragment {
 
                 //get text field values
                 title = TITLE.getText().toString();
-                cat = CAT.getText().toString();
+
                 des = DES.getText().toString();
 
                 //get all the information in a HashMap
@@ -118,7 +135,7 @@ public class EntryFragment extends Fragment {
                         });
                 //clear out edit texts
                 TITLE.setText("");
-                CAT.setText("");
+
                 DES.setText("");
             }
         });
@@ -160,5 +177,18 @@ public class EntryFragment extends Fragment {
         });
 
        return view;
+    }
+
+
+    //for category spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        cat = parent.getItemAtPosition(position).toString();
+        //Toast.makeText(parent.getContext(), cat, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }

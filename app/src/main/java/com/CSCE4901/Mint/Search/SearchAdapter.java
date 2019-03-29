@@ -33,6 +33,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         holder.mTitle.setText(mItems.get(position).title);
         holder.mDescription.setText(mItems.get(position).description);
         holder.mDate.setText(mItems.get(position).date);
+        holder.mCategory.setText(mItems.get(position).category);
 
         String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
 

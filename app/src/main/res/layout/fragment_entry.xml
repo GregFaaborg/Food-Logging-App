@@ -42,13 +42,26 @@
                     android:lines="1"
                     android:hint="Title:" />
 
-                <android.support.design.widget.TextInputEditText
-                    android:id="@+id/entry_category"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/entry_category_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_below="@id/entry_title"
-                    android:lines="1"
-                    android:hint="Category:" />
+                    android:text="Category: "
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:layout_below="@+id/entry_title"
+                    />
+
+                <Spinner
+                    android:id="@+id/entry_category"
+                    android:layout_below="@+id/entry_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:spinnerMode="dropdown"
+                    android:layout_toRightOf="@+id/entry_category_text"
+                    android:layout_marginLeft="12dp"
+                    android:prompt="@string/category"
+
+                    />
 
                 <ImageButton
                     android:id="@+id/flag"
@@ -60,19 +73,6 @@
                     android:src="@drawable/star1"
                     android:tint="#696969" />
 
-                <!-- <Button
-                    android:id="@+id/flag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignEnd="@+id/entry_category"
-                    android:layout_marginStart="10dp"
-                    android:layout_marginEnd="9dp"
-                    android:layout_toEndOf="@+id/entry_title"
-                    android:text="STAR"
-                    android:textColor="#000000"
-                    android:textStyle="bold"
-                    android:background="#696969"/> -->
-
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/entry_description"
                     android:layout_width="match_parent"
@@ -80,31 +80,17 @@
                     android:layout_below="@id/entry_category"
                     android:gravity="bottom"
                     android:hint="Description:"
-                    android:lines="4"
+                    android:lines="3"
                     android:selectAllOnFocus="false"
                     android:singleLine="false" />
 
-
-                <!--
-                Should probably change size of
-                calendar to be smaller to add more text fields
-                if it is still a problem, we can just use
-                datepicker dialog with button click
-
-             -->
-
                 <CalendarView
                     android:id="@+id/entry_calendar"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/entry_description"
                     android:layout_centerInParent="true"
-                    android:layout_marginTop="-12dp"
-                    android:theme="@style/CalThemeEntry" /> //this theme changes the date picker aka the little circle that picks the date its in res/values/styles
-
-
-
-
+                    android:theme="@style/CalThemeEntry" />
             </RelativeLayout>
         </android.support.design.card.MaterialCardView>
 
