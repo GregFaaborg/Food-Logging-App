@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -37,17 +40,20 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
     FirebaseAuth firebaseAuth;
 
     View view;
-    TextView TITLE;
+    EditText TITLE;
 
     TextView catText;
     Spinner CAT;
+    EditText customCategory;
+    boolean customEnabled = false;
 
-    TextView DES;
+
+    EditText DES;
     ImageButton FLAG;
     Button SAVE;
     CalendarView CAL;
 
-    String Flagged="0";//default set to false
+    String flagged = "0";//default set to false
     String title;
     String cat;
     String des;
@@ -64,9 +70,10 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
 
-        //initialize edittext
+        //initialize edittexts
         TITLE= view.findViewById(R.id.entry_title);
         DES=view.findViewById(R.id.entry_description);
+        customCategory = view.findViewById(R.id.custom_category);
 
         //initialize textview
         catText = view.findViewById(R.id.entry_category_text);
@@ -100,15 +107,19 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
 
                 //get text field values
                 title = TITLE.getText().toString();
-
                 des = DES.getText().toString();
+
+                //only get custom category if it is selected from the category spinner
+                if(customEnabled){
+                    cat = customCategory.getText().toString().trim();
+                }
 
                 //get all the information in a HashMap
                 Map<String, Object> data = new HashMap<>();
                 data.put("title", title);
                 data.put("category", cat);
                 data.put("description", des);
-                data.put("flag",Flagged );
+                data.put("flag", flagged);
                 data.put("date", DATE);
 
                 //get email of signed in user
@@ -135,8 +146,11 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                         });
                 //clear out edit texts
                 TITLE.setText("");
-
                 DES.setText("");
+
+                //set spinner to position 0
+                CAT.setSelection(0);
+
             }
         });
 
@@ -145,11 +159,11 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onClick(View v) {
 
                 //if flag button is not pushed
-                if(Flagged=="0") {
+                if(flagged == "0") {
                     //change color to YELLOW
                     FLAG.setColorFilter(Color.parseColor("#CCCC00"));
                     //FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
-                    Flagged = "1";
+                    flagged = "1";
                 }
                 //else if flag button has already been pushed AKA flagged =="1"
                 else
@@ -157,7 +171,7 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                     //change button color back to normal non pushed
                     FLAG.setColorFilter(Color.parseColor("#696969"));
                     //FLAG.setBackgroundColor(Color.parseColor("#696969"));
-                    Flagged="0";
+                    flagged = "0";
                 }
             }
         });
@@ -185,6 +199,12 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         cat = parent.getItemAtPosition(position).toString();
         //Toast.makeText(parent.getContext(), cat, Toast.LENGTH_SHORT).show();
+        if (cat.equals("Custom")){
+            customCategory.setVisibility(View.VISIBLE);
+            customEnabled = true;
+        } else {
+            customCategory.setVisibility(View.GONE);
+        }
     }
 
     @Override

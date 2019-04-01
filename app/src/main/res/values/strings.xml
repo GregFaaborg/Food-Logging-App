@@ -50,6 +50,11 @@
     <string name="email_password_reset">Email Password Reset</string>
     <string name="firstname">FirstName:</string>
     <string name="lastname">LastName</string>
+    <string name="category_spinner_text">Category:</string>
+    <string name="custom_category">Custom Category</string>
+    <string name="entry_description">Description:</string>
+    <string name="add_entry">Add Entry</string>
+    <string name="entry_title">Title:</string>
 
     <string-array name="categories">
         <item>Breakfast</item>
