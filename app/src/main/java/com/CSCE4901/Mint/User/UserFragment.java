@@ -39,7 +39,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     Button update;
     TextView first;
     TextView last;
-    TextView emailDB;
+    EditText emailDB;
     TextView docEmail;
     EditText etNewEmail;
 
@@ -114,7 +114,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         return view;
     }
-    private void setUpdate() {
+    /*private void setUpdate() {
 
         String oldEmail = emailDB.getText().toString();
         String newEmail = etNewEmail.getText().toString();
@@ -186,7 +186,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         }
 
-    }
+    } */
 
     @Override
     public void onClick(View v) {
