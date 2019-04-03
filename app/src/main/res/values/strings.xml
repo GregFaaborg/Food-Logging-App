@@ -30,6 +30,7 @@
     </string>
     <string name="_8942">⋮</string>
     <string name="title">Title</string>
+    <string name="category">Category</string>
     <string name="date">Date</string>
     <string name="description">Description</string>
     <string name="search_by_button">Search by button</string>
@@ -49,6 +50,19 @@
     <string name="email_password_reset">Email Password Reset</string>
     <string name="firstname">FirstName:</string>
     <string name="lastname">LastName</string>
+    <string name="category_spinner_text">Category:</string>
+    <string name="custom_category">Custom Category</string>
+    <string name="entry_description">Description:</string>
+    <string name="add_entry">Add Entry</string>
+    <string name="entry_title">Title:</string>
 
+    <string-array name="categories">
+        <item>Breakfast</item>
+        <item>Lunch</item>
+        <item>Dinner</item>
+        <item>Snack</item>
+        <item>Custom</item>
 
+    </string-array>
+    
 </resources>

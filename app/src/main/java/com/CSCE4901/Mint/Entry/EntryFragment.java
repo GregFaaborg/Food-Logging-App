@@ -4,14 +4,20 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,20 +34,26 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class EntryFragment extends Fragment {
+public class EntryFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //declare
     FirebaseAuth firebaseAuth;
 
     View view;
-    TextView TITLE;
-    TextView CAT;
-    TextView DES;
+    EditText TITLE;
+
+    TextView catText;
+    Spinner CAT;
+    EditText customCategory;
+    boolean customEnabled = false;
+
+
+    EditText DES;
     ImageButton FLAG;
     Button SAVE;
     CalendarView CAL;
 
-    String Flagged="0";//default set to false
+    String flagged = "0";//default set to false
     String title;
     String cat;
     String des;
@@ -58,10 +70,22 @@ public class EntryFragment extends Fragment {
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
 
-        //initialize textviews
+        //initialize edittexts
         TITLE= view.findViewById(R.id.entry_title);
-        CAT= view.findViewById(R.id.entry_category);
         DES=view.findViewById(R.id.entry_description);
+        customCategory = view.findViewById(R.id.custom_category);
+
+        //initialize textview
+        catText = view.findViewById(R.id.entry_category_text);
+
+
+        //initialize spinner
+        CAT= view.findViewById(R.id.entry_category);
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.categories, android.R.layout.simple_spinner_item);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        CAT.setAdapter(arrayAdapter);
+        CAT.setOnItemSelectedListener(this);
 
 
         //initialize Buttons
@@ -83,51 +107,50 @@ public class EntryFragment extends Fragment {
 
                 //get text field values
                 title = TITLE.getText().toString();
-                cat = CAT.getText().toString();
                 des = DES.getText().toString();
 
-                if(title.equals("") || title.equals("Need Title"))
-                {
-                    TITLE.setTextColor(Color.parseColor("#8B0000"));
-                    TITLE.setText("Need Title");
-
+                //only get custom category if it is selected from the category spinner
+                if(customEnabled){
+                    cat = customCategory.getText().toString().trim();
                 }
-                else {
-                    //get all the information in a HashMap
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("title", title);
-                    data.put("category", cat);
-                    data.put("description", des);
-                    data.put("flag", Flagged);
-                    data.put("date", DATE);
 
-                    //get email of signed in user
-                    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                    String UserEmail = currentUser.getEmail();
+                //get all the information in a HashMap
+                Map<String, Object> data = new HashMap<>();
+                data.put("title", title);
+                data.put("category", cat);
+                data.put("description", des);
+                data.put("flag", flagged);
+                data.put("date", DATE);
+
+                //get email of signed in user
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                String UserEmail = currentUser.getEmail();
 
 
-                    //save text views and flag button to database in user email collection
-                    db.collection(UserEmail).add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                        @Override
-                        public void onSuccess(DocumentReference documentReference) {
-                            Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
-                            Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
+                //save text views and flag button to database in user email collection
+                db.collection(UserEmail).add(data)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
+                                Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
 
-                            Toast.makeText(getContext(), "Error Creating Entry", Toast.LENGTH_SHORT).show();
-                            Log.d("CREATE ENTRY", "OnFailure", e);
-                        }
-                    });
-                    //clear out edit texts
-                    TITLE.setText("");
-                    CAT.setText("");
-                    DES.setText("");
+                                Toast.makeText(getContext(), "Error Creating Entry", Toast.LENGTH_SHORT).show();
+                                Log.d("CREATE ENTRY", "OnFailure" ,e);
+                            }
+                        });
+                //clear out edit texts
+                TITLE.setText("");
+                DES.setText("");
 
-                    TITLE.setTextColor(Color.BLACK);
-                }
+                //set spinner to position 0
+                CAT.setSelection(0);
+
             }
         });
 
@@ -136,11 +159,11 @@ public class EntryFragment extends Fragment {
             public void onClick(View v) {
 
                 //if flag button is not pushed
-                if(Flagged=="0") {
+                if(flagged == "0") {
                     //change color to YELLOW
                     FLAG.setColorFilter(Color.parseColor("#CCCC00"));
                     //FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
-                    Flagged = "1";
+                    flagged = "1";
                 }
                 //else if flag button has already been pushed AKA flagged =="1"
                 else
@@ -148,7 +171,7 @@ public class EntryFragment extends Fragment {
                     //change button color back to normal non pushed
                     FLAG.setColorFilter(Color.parseColor("#696969"));
                     //FLAG.setBackgroundColor(Color.parseColor("#696969"));
-                    Flagged="0";
+                    flagged = "0";
                 }
             }
         });
@@ -168,5 +191,24 @@ public class EntryFragment extends Fragment {
         });
 
        return view;
+    }
+
+
+    //for category spinner
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        cat = parent.getItemAtPosition(position).toString();
+        //Toast.makeText(parent.getContext(), cat, Toast.LENGTH_SHORT).show();
+        if (cat.equals("Custom")){
+            customCategory.setVisibility(View.VISIBLE);
+            customEnabled = true;
+        } else {
+            customCategory.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> parent) {
+
     }
 }
