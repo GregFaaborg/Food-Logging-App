@@ -114,7 +114,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 db.collection("users").document(email).delete();
 
                 //get strings in from the text views
-                email=emailDB.getText().toString();
+                //email=emailDB.getText().toString();
                 FIRST=first.getText().toString();
                 LAST=last.getText().toString();
                 docEMAIL=docEmail.getText().toString();
@@ -126,12 +126,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 Map<String, Object> data = new HashMap<>();
                 data.put("firstName", FIRST);
                 data.put("lastName", LAST);
-                data.put("email", email);
+                //data.put("email", email);
                 data.put("doctorEmail",docEMAIL);
 
-                db.collection("users").document(email).set(data);
+                //db.collection("users").document(email).set(data);
                 //TOOOOO DOOOOO
-                //do the firebase auth email change
+                //do the firebase auth email update
 
         }
 
