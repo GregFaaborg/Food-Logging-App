@@ -1,29 +1,18 @@
 package com.CSCE4901.Mint.Report;
 
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.AppCompatTextView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
-
-import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,21 +21,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.DayOfWeek;
+import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 
-
-public class ReportFragment extends Fragment{
+public class ReportFragment extends Fragment {
 
     View view;
 
@@ -55,12 +40,6 @@ public class ReportFragment extends Fragment{
     Button favorites;
 
     FirebaseFirestore db;
-
-    public static final int REQUEST_CODE = 1;  // Used to identify the result
-
-    public ReportFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -77,8 +56,6 @@ public class ReportFragment extends Fragment{
         //get instance of firestore database
         db = FirebaseFirestore.getInstance();
 
-        final FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-
 
         weekly = view.findViewById(R.id.weekly_report);
         monthly = view.findViewById(R.id.monthly_report);
@@ -88,10 +65,30 @@ public class ReportFragment extends Fragment{
             @Override
             public void onClick(View v) {
 
-                AppCompatDialogFragment appCompatDialogFragment = new DatePickerFragment();
 
-                appCompatDialogFragment.setTargetFragment(ReportFragment.this, REQUEST_CODE);
-                appCompatDialogFragment.show(fragmentManager,"Select Week");
+                FragmentManager fragmentManager = getActivity().getFragmentManager();
+
+                
+                SmoothDateRangePickerFragment smoothDateRangePickerFragment = SmoothDateRangePickerFragment.newInstance(
+                        new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
+                            @Override
+                            public void onDateRangeSet(SmoothDateRangePickerFragment view,
+                                                       int yearStart, int monthStart,
+                                                       int dayStart, int yearEnd,
+                                                       int monthEnd, int dayEnd)
+                            {
+                                //get start and end date
+                                String startDate = dayStart + "/" + (++monthStart) + "/" + yearStart;
+                                String endDate = dayEnd + "/" + (++monthEnd) + "/" + yearEnd;
+
+                                dateRangeQuery(startDate, endDate);
+                            }
+                        });
+
+                smoothDateRangePickerFragment.setMaxDate(Calendar.getInstance());
+                smoothDateRangePickerFragment.show(fragmentManager, "smoothDateRangePicker");
+
+
 
             }
         });
@@ -112,53 +109,6 @@ public class ReportFragment extends Fragment{
         });
 
         return view;
-    }
-
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // check for the results
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // get date from string
-            String selectedDate = data.getStringExtra("selectedDate");
-
-            getWeekRange(selectedDate);
-        }
-    }
-
-    private void getWeekRange(String selectedDate) {
-
-        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.US);
-
-        Date date;
-        Calendar cal = Calendar.getInstance();
-
-        try {
-
-            //parse selected date and set date to that
-            date = sdf.parse(selectedDate);
-            cal.setTime(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //set date to sunday (minimum day of week)
-        cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
-
-        //getting first day of week
-        Date firstDay = cal.getTime();
-        String firstDayOfWeek = sdf.format(firstDay);
-
-        //Add 6 days to first day of week to get last day
-        cal.add(Calendar.DAY_OF_WEEK, 6);
-        String lastDayOfWeek= sdf.format(cal.getTime());
-
-
-        //Printing Week range
-        Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
-
-        dateRangeQuery(firstDayOfWeek, lastDayOfWeek);
     }
 
 
@@ -223,10 +173,6 @@ public class ReportFragment extends Fragment{
                     }
                 });
 
-
-
-
-
     }
 
     private String getUserEmail(){
@@ -263,5 +209,4 @@ public class ReportFragment extends Fragment{
                     }
                 });
     }
-
 }
