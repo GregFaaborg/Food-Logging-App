@@ -109,47 +109,54 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                 title = TITLE.getText().toString();
                 des = DES.getText().toString();
 
-                //only get custom category if it is selected from the category spinner
-                if(customEnabled){
-                    cat = customCategory.getText().toString().trim();
+                if(title.equals("") || title.equals("Need Title"))
+                {
+                    TITLE.setTextColor(Color.parseColor("#8B0000"));
+                    TITLE.setText("Need Title");
+
+                }
+                else {
+                    //only get custom category if it is selected from the category spinner
+                    if(customEnabled){
+                        cat = customCategory.getText().toString().trim();
+                    }
+                    //get all the information in a HashMap
+                    Map<String, Object> data = new HashMap<>();
+                    data.put("title", title);
+                    data.put("category", cat);
+                    data.put("description", des);
+                    data.put("flag", flagged);
+                    data.put("date", DATE);
+
+                    //get email of signed in user
+                    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                    String UserEmail = currentUser.getEmail();
+
+
+                    //save text views and flag button to database in user email collection
+                    db.collection(UserEmail).add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                        @Override
+                        public void onSuccess(DocumentReference documentReference) {
+                            Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
+                            Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+
+                            Toast.makeText(getContext(), "Error Creating Entry", Toast.LENGTH_SHORT).show();
+                            Log.d("CREATE ENTRY", "OnFailure", e);
+                        }
+                    });
+                    //clear out edit texts
+                    TITLE.setText("");
+                   // CAT.setText("");
+                    DES.setText("");
+                    //set spinner to position 0
+                    CAT.setSelection(0);
+                    TITLE.setTextColor(Color.BLACK);
                 }
 
-                //get all the information in a HashMap
-                Map<String, Object> data = new HashMap<>();
-                data.put("title", title);
-                data.put("category", cat);
-                data.put("description", des);
-                data.put("flag", flagged);
-                data.put("date", DATE);
-
-                //get email of signed in user
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
-
-
-                //save text views and flag button to database in user email collection
-                db.collection(UserEmail).add(data)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                            @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
-                                Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-
-                                Toast.makeText(getContext(), "Error Creating Entry", Toast.LENGTH_SHORT).show();
-                                Log.d("CREATE ENTRY", "OnFailure" ,e);
-                            }
-                        });
-                //clear out edit texts
-                TITLE.setText("");
-                DES.setText("");
-
-                //set spinner to position 0
-                CAT.setSelection(0);
 
             }
         });
