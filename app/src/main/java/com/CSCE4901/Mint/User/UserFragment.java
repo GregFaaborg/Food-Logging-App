@@ -41,18 +41,19 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     TextView last;
     EditText emailDB;
     TextView docEmail;
-    EditText etNewEmail;
+   /* EditText etNewEmail;*/
 
     String email;
     String FIRST="first name";
     String LAST="last name";
     String docEMAIL="docs email";
 
-    FirebaseAuth mAuth;
-    FirebaseUser fbUser;
+    /*FirebaseAuth mAuth;
+    FirebaseUser fbUser; */
+
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
-    Context mContext;
+    /* Context mContext; */
 
 
     @Nullable
@@ -68,12 +69,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         docEmail=view.findViewById(R.id.doc);
 
         //Update for email
-        etNewEmail=view.findViewById(R.id.user_email);
+        /* etNewEmail=view.findViewById(R.id.user_email);
         update=view.findViewById(R.id.update_button);
 
 
         mAuth = FirebaseAuth.getInstance();
-        fbUser = mAuth.getCurrentUser();
+        fbUser = mAuth.getCurrentUser(); */
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -114,6 +115,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         return view;
     }
+    
     /*private void setUpdate() {
 
         String oldEmail = emailDB.getText().toString();
