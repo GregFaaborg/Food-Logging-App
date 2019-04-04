@@ -28,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
+import java.util.TimerTask;
 import java.util.Vector;
 
 
@@ -169,24 +170,8 @@ public class MainActivity extends AppCompatActivity {
         }
         else {
 
-            RelativeLayout relativeLayout = findViewById(R.id.main_relative_layout);
-            
-            internetConnectionSnackbar(relativeLayout);
+            showSnackIfOffline();
         }
-    }
-    
-
-    private void internetConnectionSnackbar(View view){
-
-
-        Snackbar.make(view,"Internet Connection Required", Snackbar.LENGTH_LONG)
-                .setAction("DISMISS", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //when "DISMISS" is clicked snackbar will hide
-                    }
-                })
-                .show();
     }
 
     private void launchOverview(){
@@ -210,6 +195,38 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
 
+    }
+
+    public void showSnackIfOffline(){
+        final boolean online = isOnline();
+        runOnUiThread(new TimerTask() { //must run on main thread to update UI (show Snackbar), can be used only in Activity (FragmentActivity, AppCompatActivity...)
+            @Override
+            public void run() {
+                if(!online)
+                    Snackbar.make(findViewById(android.R.id.content), "Internet Connection Required", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Dismiss", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //when dismissed is clicked hide snackbar
+                        }
+                    })
+                            .show();
+                else{
+
+                    //do nothing, continue like normal
+                }
+            }
+        });
+    }
+
+    private boolean isOnline(){
+        try {
+            return Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8").waitFor() == 0; //  "8.8.8.8" is the server to ping
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

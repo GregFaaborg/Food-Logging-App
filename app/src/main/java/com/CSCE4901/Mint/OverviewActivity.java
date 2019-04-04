@@ -4,10 +4,12 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.CSCE4901.Mint.Entry.EntryFragment;
 import com.CSCE4901.Mint.Home.HomeFragment;
@@ -16,6 +18,7 @@ import com.CSCE4901.Mint.Search.SearchFragment;
 import com.CSCE4901.Mint.User.UserFragment;
 
 import java.util.Objects;
+import java.util.TimerTask;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -83,12 +86,46 @@ public class OverviewActivity extends AppCompatActivity {
                     launchFragment).commit();
             navigation.setSelectedItemId(R.id.navigation_home);
         }
+    }
 
+    public void showSnackIfOffline(){
+        final boolean online = isOnline();
+        runOnUiThread(new TimerTask() { //must run on main thread to update UI (show Snackbar), can be used only in Activity (FragmentActivity, AppCompatActivity...)
+            @Override
+            public void run() {
+                if(!online)
+                    Snackbar.make(findViewById(android.R.id.content), "Internet Connection Required", Snackbar.LENGTH_INDEFINITE)
+                            .setAction("Dismiss", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    //when dismissed is clicked hide snackbar
+                                }
+                            })
+                            .show();
+                else{
 
+                    //do nothing, continue like normal
+                }
+            }
+        });
+    }
 
+    private boolean isOnline(){
+        try {
+            return Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8").waitFor() == 0; //  "8.8.8.8" is the server to ping
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
+    @Override
+    protected void onStart() {
 
+        super.onStart();
 
+        showSnackIfOffline();
     }
 
 }
