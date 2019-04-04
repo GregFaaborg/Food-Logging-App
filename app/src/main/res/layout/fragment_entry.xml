@@ -90,9 +90,6 @@
                     android:selectAllOnFocus="false"
                     android:singleLine="false" />
 
-
-
-
                 <CalendarView
                     android:id="@+id/entry_calendar"
                     android:layout_width="match_parent"
