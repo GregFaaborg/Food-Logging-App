@@ -1,16 +1,20 @@
 package com.CSCE4901.Mint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.content.pm.PackageInfoCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +28,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import java.util.Objects;
+import java.util.TimerTask;
+import java.util.Vector;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -32,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout emailLayout;
     private TextInputLayout passwordLayout;
 
-    //todo
+
     private TextView forgotPassword;
 
 
@@ -150,21 +156,33 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Check if user is signed in (non-null) if they are launch overview activity
+
+        if (isNetworkAvailable(getApplicationContext())){
+            FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+            if (currentUser != null) {
+                launchOverview();
+            }
+        }
+        else {
+
+            showSnackIfOffline();
+        }
+    }
+
     private void launchOverview(){
         Intent intent = new Intent(this,OverviewActivity.class);
         startActivity(intent);
         finish();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-
-        // Check if user is signed in (non-null) if they are launch overview activity
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        if (currentUser != null) {
-            launchOverview();
-        }
+    private boolean isNetworkAvailable(Context context) {
+        final ConnectivityManager connectivityManager = ((ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE));
+        return connectivityManager.getActiveNetworkInfo() != null && connectivityManager.getActiveNetworkInfo().isConnected();
     }
 
     private void checkPlayServicesVersion(){
@@ -177,6 +195,38 @@ public class MainActivity extends AppCompatActivity {
             dialog.show();
         }
 
+    }
+
+    public void showSnackIfOffline(){
+        final boolean online = isOnline();
+        runOnUiThread(new TimerTask() { //must run on main thread to update UI (show Snackbar), can be used only in Activity (FragmentActivity, AppCompatActivity...)
+            @Override
+            public void run() {
+                if(!online)
+                    Snackbar.make(findViewById(android.R.id.content), "Internet Connection Required", Snackbar.LENGTH_INDEFINITE)
+                    .setAction("Dismiss", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            //when dismissed is clicked hide snackbar
+                        }
+                    })
+                            .show();
+                else{
+
+                    //do nothing, continue like normal
+                }
+            }
+        });
+    }
+
+    private boolean isOnline(){
+        try {
+            return Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8").waitFor() == 0; //  "8.8.8.8" is the server to ping
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 
 }

@@ -28,6 +28,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -92,6 +93,9 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
 
         //initialize calendar view
         CAL=view.findViewById(R.id.entry_calendar);
+        Calendar now = Calendar.getInstance();
+        CAL.setMaxDate(now.getTimeInMillis());
+
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
