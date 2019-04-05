@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -57,6 +56,8 @@ public class HomeFragment extends Fragment {
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
         final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM, d, yyyy");
 
+        //OPT.setOnItemSelectedListener(this);
+
         //initialize calendar view
         CAL=view.findViewById(R.id.home_calendar);
 
@@ -80,6 +81,7 @@ public class HomeFragment extends Fragment {
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         String UserEmail = currentUser.getEmail();
 
+
         db.collection(UserEmail)
                 .whereEqualTo("date", pickedDate)
                 .get()
@@ -99,6 +101,7 @@ public class HomeFragment extends Fragment {
                         }
                     }
                 });
+
 
         //when date picker is change set the DATe to that chosen date
         CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -142,12 +145,11 @@ public class HomeFragment extends Fragment {
                             }
                         });
 
+
             }
         });
-
-
-
         return view;
 
     }
+
 }

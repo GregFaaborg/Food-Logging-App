@@ -14,6 +14,7 @@ import java.util.ArrayList;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     private ArrayList<SearchItem> mItems;
+
     Context mContext;
     public SearchAdapter(ArrayList itemList) {
         mItems = itemList;
@@ -24,11 +25,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent, false);
         mContext = parent.getContext();
         SearchViewHolder holder = new SearchViewHolder(v);
+
         return holder;
     }
 
     @Override
-    public void onBindViewHolder(SearchViewHolder holder, final int position) {
+    public void onBindViewHolder(final SearchViewHolder holder, final int position) {
 
         //get item and concatenize with their appropriate option
         String titleHolder="Title: "+mItems.get(position).title;
@@ -63,10 +65,60 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 Toast.makeText(mContext, String.format("%d", position + 1), Toast.LENGTH_SHORT).show();
             }
         });
+
+        holder.mOPT.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //gone options button
+                holder.mOPT.setVisibility(View.GONE);
+                //variables visible XML
+                holder.mEdit.setVisibility(View.VISIBLE);
+                holder.mDel.setVisibility(View.VISIBLE);
+                holder.mX.setVisibility(View.VISIBLE);
+                holder.mDelImage.setVisibility(View.VISIBLE);
+                holder.mXImage.setVisibility(View.VISIBLE);
+                holder.mEditImage.setVisibility(View.VISIBLE);
+
+            }
+
+            });
+
+        holder.mX.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //variables gone XML
+                holder.mEdit.setVisibility(View.GONE);
+                holder.mDel.setVisibility(View.GONE);
+                holder.mX.setVisibility(View.GONE);
+                holder.mDelImage.setVisibility(View.GONE);
+                holder.mXImage.setVisibility(View.GONE);
+                holder.mEditImage.setVisibility(View.GONE);
+
+                //visible options button
+                holder.mOPT.setVisibility(View.VISIBLE);
+            }
+        });
+
+        holder.mEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //edit entry
+
+            }
+        });
+
+        holder.mDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //delete entry
+            }
+        });
+
     }
 
     @Override
     public int getItemCount() {
         return mItems.size();
     }
+
 }

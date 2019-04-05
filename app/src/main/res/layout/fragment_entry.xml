@@ -58,7 +58,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:layout_below="@+id/entry_title"
                     />
-
+                
                 <Spinner
                     android:id="@+id/entry_category"
                     android:layout_below="@+id/entry_title"
@@ -89,9 +89,6 @@
                     android:lines="3"
                     android:selectAllOnFocus="false"
                     android:singleLine="false" />
-
-
-
 
                 <CalendarView
                     android:id="@+id/entry_calendar"
