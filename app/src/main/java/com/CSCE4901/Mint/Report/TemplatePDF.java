@@ -70,7 +70,7 @@ public class TemplatePDF {
 
         pdfFile = new File(folder, dateCreated + ".pdf");
 
-        Toast.makeText(context, pdfFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(context, pdfFile.getAbsolutePath(), Toast.LENGTH_SHORT).show();
 
 
         File[] files = folder.listFiles();
