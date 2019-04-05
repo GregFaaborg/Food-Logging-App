@@ -88,44 +88,6 @@ public class OverviewActivity extends AppCompatActivity {
         }
     }
 
-    public void showSnackIfOffline(){
-        final boolean online = isOnline();
-        runOnUiThread(new TimerTask() { //must run on main thread to update UI (show Snackbar), can be used only in Activity (FragmentActivity, AppCompatActivity...)
-            @Override
-            public void run() {
-                if(!online)
-                    Snackbar.make(findViewById(android.R.id.content), "Internet Connection Required", Snackbar.LENGTH_INDEFINITE)
-                            .setAction("Dismiss", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    //when dismissed is clicked hide snackbar
-                                }
-                            })
-                            .show();
-                else{
 
-                    //do nothing, continue like normal
-                }
-            }
-        });
-    }
-
-    private boolean isOnline(){
-        try {
-            return Runtime.getRuntime().exec("/system/bin/ping -c 1 8.8.8.8").waitFor() == 0; //  "8.8.8.8" is the server to ping
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    protected void onStart() {
-
-        super.onStart();
-
-        showSnackIfOffline();
-    }
 
 }

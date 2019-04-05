@@ -1,11 +1,16 @@
 package com.CSCE4901.Mint.Report;
 
 
+import android.Manifest;
 import android.app.FragmentManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,6 +46,11 @@ public class ReportFragment extends Fragment {
 
     FirebaseFirestore db;
 
+    //for requesting permissions to access files
+    private static final int REQUEST_CODE = 22;
+
+
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,6 +71,22 @@ public class ReportFragment extends Fragment {
         monthly = view.findViewById(R.id.monthly_report);
         favorites = view.findViewById(R.id.favorites_report);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+
+
+        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            // Permission is not granted
+            //Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+
+            ActivityCompat.requestPermissions(getActivity(),
+                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+        }
+
         weekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,8 +104,8 @@ public class ReportFragment extends Fragment {
                                                        int monthEnd, int dayEnd)
                             {
                                 //get start and end date
-                                String startDate = dayStart + "/" + (++monthStart) + "/" + yearStart;
-                                String endDate = dayEnd + "/" + (++monthEnd) + "/" + yearEnd;
+                                String startDate =  (++monthStart) + "/" + dayStart + "/" + yearStart;
+                                String endDate = (++monthEnd) + "/" + dayEnd + "/" + yearEnd;
 
                                 dateRangeQuery(startDate, endDate);
                             }
@@ -90,6 +116,7 @@ public class ReportFragment extends Fragment {
 
 
 
+
             }
         });
 
@@ -97,6 +124,7 @@ public class ReportFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 monthPicker();
+
             }
         });
 
@@ -137,9 +165,10 @@ public class ReportFragment extends Fragment {
                 date.set(Calendar.DAY_OF_MONTH, date.getActualMaximum(Calendar.DAY_OF_MONTH));
                 String lastDayOfMonth = sdf.format(date.getTime());
 
-                Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
 
                 dateRangeQuery(firstDayOfMonth, lastDayOfMonth);
+
 
             }
         }, date.get(Calendar.YEAR), date.get(Calendar.MONTH));
@@ -151,9 +180,12 @@ public class ReportFragment extends Fragment {
                 .show();
     }
 
-    private void dateRangeQuery(String begin, String end){
+    private void dateRangeQuery(final String begin, final String end){
+
+
 
         String email = getUserEmail();
+
         db.collection(email)
                 .whereGreaterThanOrEqualTo("date", begin)
                 .whereLessThanOrEqualTo("date", end)
@@ -161,13 +193,39 @@ public class ReportFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        TemplatePDF templatePDF;
+                        //constructor for PDF
+                        templatePDF = new TemplatePDF(getContext());
+
+                        createPDF(templatePDF,"for dates ",begin + " to " + end);
+
+                        StringBuilder entryData = new StringBuilder();
+                        String favorite;
+
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
                                 Log.d("Month", document.getId() + " => " + document.getData());
+                                entryData.append("Title: ").append(document.getString("title")).append("\n");
+                                entryData.append("Date: ").append(document.getString("date")).append("\n");
+                                entryData.append("Category: ").append(document.getString("category")).append("\n");
+                                favorite = document.getString("flag");
+                                favorite = favorite.equals("0") ? "No" : "Yes";
+                                entryData.append("Favorite: ").append(favorite).append("\n");
+                                entryData.append("Description: ").append(document.getString("description")).append("\n");
+                                entryData.append("\n");
+
+                                String finalEntryData = entryData.toString();
+                                templatePDF.addParagraph(finalEntryData);
+
                             }
+                            templatePDF.closeDocument();
+                            templatePDF.viewPDF();
                         }
                         else {
+
+                            Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
                             Log.d("Month", "Error getting documents: ", task.getException());
                         }
                     }
@@ -190,6 +248,8 @@ public class ReportFragment extends Fragment {
 
     private void getFavorites() {
 
+        //createPDF("Favorites ", "");
+
         String email = getUserEmail();
         db.collection(email)
                 .whereEqualTo("flag", "1")
@@ -197,16 +257,53 @@ public class ReportFragment extends Fragment {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        TemplatePDF templatePDF;
+                        //constructor for PDF
+                        templatePDF = new TemplatePDF(getContext());
+
+                        createPDF(templatePDF, "Favorites", "");
+
+                        StringBuilder entryData = new StringBuilder();
+                        String favorite;
+
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
                                 Log.d("Favorites", document.getId() + " => " + document.getData());
+                                entryData.append("Title: ").append(document.getString("title")).append("\n");
+                                entryData.append("Date: ").append(document.getString("date")).append("\n");
+                                entryData.append("Category: ").append(document.getString("category")).append("\n");
+                                favorite = document.getString("flag");
+                                favorite = favorite.equals("0") ? "No" : "Yes";
+                                entryData.append("Favorite: ").append(favorite).append("\n");
+                                entryData.append("Description: ").append(document.getString("description")).append("\n");
+                                entryData.append("\n");
+
+                                String finalEntryData = entryData.toString();
+                                templatePDF.addParagraph(finalEntryData);
+
+
                             }
+                            templatePDF.closeDocument();
+                            templatePDF.viewPDF();
                         }
                         else {
                             Log.d("Favorites", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
     }
+
+    private void createPDF(TemplatePDF templatePDF,String subTitle, String dateRange)
+    {
+
+        templatePDF.openDocument();
+        templatePDF.addMetaData("Report", "Entries Report", "Mint App");
+        templatePDF.addTitles("Mint Report", subTitle, dateRange);
+
+    }
+
+
 }
