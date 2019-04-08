@@ -9,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.CSCE4901.Mint.Home.HomeFragment;
 import com.CSCE4901.Mint.R;
 import com.CSCE4901.Mint.update_entry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +20,7 @@ import java.util.HashMap;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     private ArrayList<SearchItem> mItems;
+    private SearchAdapter mAdapter;
     FirebaseAuth firebaseAuth; //auth decleration
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
@@ -31,8 +31,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     String DATE;
 
     Context mContext;
-    public SearchAdapter(ArrayList itemList) {
+    public SearchAdapter(ArrayList itemList, SearchAdapter adapter) {
         mItems = itemList;
+        mAdapter = adapter;
     }
 
     @Override
@@ -141,10 +142,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
                 mContext.startActivity(goIntent);
-                Intent homeIntent = new Intent(mContext, HomeFragment.class);
-                mContext.startActivity(homeIntent);
-
-
+                mAdapter.notifyDataSetChanged();
 
             }
         });

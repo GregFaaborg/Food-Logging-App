@@ -107,7 +107,7 @@ public class SearchFragment extends Fragment {
                                         arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                     }
-                                    mAdapter = new SearchAdapter(arrItems);
+                                    mAdapter = new SearchAdapter(arrItems,mAdapter);
                                     mRecyclerView.setAdapter(mAdapter);
                                 } else {
                                     Log.w(TAG, "Error getting documents.", task.getException());
