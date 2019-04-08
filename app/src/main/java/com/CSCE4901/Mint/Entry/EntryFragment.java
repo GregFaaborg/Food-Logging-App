@@ -4,8 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -33,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class EntryFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -125,7 +122,7 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                         cat = customCategory.getText().toString().trim();
                     }
                     //get all the information in a HashMap
-                    Map<String, Object> data = new HashMap<>();
+                    HashMap<String, Object> data = new HashMap<>();
                     data.put("title", title);
                     data.put("category", cat);
                     data.put("description", des);

@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -79,6 +78,7 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         String UserEmail = currentUser.getEmail();
@@ -92,11 +92,12 @@ public class HomeFragment extends Fragment {
                         if (task.isSuccessful()) {
                             ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title")));
+                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
                             mAdapter = new SearchAdapter(arrItems);
                             mRecyclerView.setAdapter(mAdapter);
+
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
                         }
@@ -134,7 +135,7 @@ public class HomeFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title")));
+                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                     }
                                     mAdapter = new SearchAdapter(arrItems);

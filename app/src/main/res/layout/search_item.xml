@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_margin="5dp">
+    android:layout_margin="5dp"
+    android:orientation="vertical">
 
 
     <android.support.v7.widget.CardView
@@ -15,18 +15,29 @@
 
 
         <RelativeLayout
-            android:layout_width="match_parent"
+            android:layout_width="437dp"
             android:layout_height="match_parent"
+
             android:padding="@dimen/activity_horizontal_margin">
+
+            <Button
+                android:id="@+id/options"
+                android:layout_width="43dp"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/cat"
+                android:layout_marginStart="-5dp"
+                android:layout_marginBottom="57dp"
+                android:layout_toEndOf="@+id/flag"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:text="@string/_8942"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large"
+                android:textSize="25sp" />
 
             <TextView
                 android:id="@+id/title"
-                android:layout_width="wrap_content"
+                android:layout_width="250dp"
                 android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentTop="true"
-
-                android:layout_toStartOf="@+id/flag"
                 android:text="@string/title"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
@@ -35,63 +46,124 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/title"
-                android:layout_alignParentStart="true"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="6dp"
                 android:text="@string/date"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
-
-
-            <TextView
-                android:id="@+id/options"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:paddingStart="@dimen/activity_horizontal_margin"
-
-                android:text="@string/_8942"
-                android:textAppearance="@style/TextAppearance.AppCompat.Large"
-                android:textSize="25sp" />
-
-            <TextView
-                android:id="@+id/cat"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/date"
-                android:layout_marginTop="12dp"
-                android:layout_alignParentStart="true"
-                android:text="Category"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
             <TextView
                 android:id="@+id/description"
-                android:layout_width="wrap_content"
+                android:layout_width="333dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/cat"
                 android:layout_alignParentStart="true"
-                android:layout_marginTop="12dp"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="11dp"
                 android:baselineAligned="false"
                 android:ellipsize="end"
                 android:text="@string/description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
+
+            <TextView
+                android:id="@+id/cat"
+                android:layout_width="333dp"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/title"
+                android:layout_marginTop="45dp"
+                android:text="Category"
+                android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+
+
             <ImageView
                 android:id="@+id/flag"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginLeft="4dp"
-                android:layout_toStartOf="@+id/options"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@+id/title"
                 app:srcCompat="@drawable/star1" />
+
+
+            <ImageButton
+                android:id="@+id/del"
+                android:layout_width="56dp"
+                android:layout_height="53dp"
+                android:layout_alignBottom="@+id/description"
+                android:layout_marginEnd="9dp"
+                android:layout_marginBottom="3dp"
+                android:layout_toStartOf="@+id/x"
+                android:background="@null"
+                android:tint="@color/colorPrimaryDark"
+                android:visibility="gone"
+                app:srcCompat="@drawable/circle" />
+
+            <ImageButton
+                android:id="@+id/x"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignEnd="@+id/description"
+                android:layout_alignBottom="@+id/description"
+                android:layout_marginEnd="-4dp"
+                android:layout_marginBottom="9dp"
+                android:background="@null"
+                android:tint="@color/colorAccent"
+                android:visibility="gone"
+                app:srcCompat="@drawable/circle" />
+
+            <ImageButton
+                android:id="@+id/edit"
+                android:layout_width="56dp"
+                android:layout_height="53dp"
+                android:layout_above="@+id/del"
+                android:layout_alignEnd="@+id/cat"
+                android:layout_marginEnd="-10dp"
+                android:layout_marginBottom="-1dp"
+                android:background="@null"
+                android:tint="@color/colorPrimaryDark"
+                android:visibility="gone"
+                app:srcCompat="@drawable/circle" />
+
+            <ImageView
+                android:id="@+id/xImage"
+                android:layout_width="27dp"
+                android:layout_height="16dp"
+                android:layout_alignEnd="@+id/description"
+                android:layout_alignBottom="@+id/description"
+                android:layout_marginEnd="2dp"
+                android:layout_marginBottom="20dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/gob3" />
+
+            <ImageView
+                android:id="@+id/editImage"
+                android:layout_width="60dp"
+                android:layout_height="53dp"
+                android:layout_above="@+id/del"
+                android:layout_alignStart="@+id/del"
+                android:layout_marginStart="51dp"
+                android:layout_marginEnd="-41dp"
+                android:layout_marginBottom="-1dp"
+                android:layout_toStartOf="@+id/xImage"
+                android:visibility="gone"
+                app:srcCompat="@drawable/edit1" />
+
+            <ImageView
+                android:id="@+id/delImage"
+                android:layout_width="44dp"
+                android:layout_height="41dp"
+                android:layout_above="@+id/xImage"
+                android:layout_alignStart="@+id/edit"
+                android:layout_alignEnd="@+id/cat"
+                android:layout_marginStart="-46dp"
+                android:layout_marginEnd="48dp"
+                android:layout_marginBottom="-28dp"
+                android:visibility="gone"
+                app:srcCompat="@drawable/del" />
 
 
         </RelativeLayout>
 
 
     </android.support.v7.widget.CardView>
-
-
-
-
-
 
 </LinearLayout>

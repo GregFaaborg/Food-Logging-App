@@ -6,6 +6,7 @@ public class SearchItem {
     String description;
     String flag;
     String title;
+    String id;
 
     public String getCategory() {
         return category;
@@ -22,12 +23,14 @@ public class SearchItem {
     public String getTitle(){
         return title;
     }
+    public  String getId() {return id;}
 
-    public SearchItem(String category, String date, String description, String flag, String title) {
+    public SearchItem(String category, String date, String description, String flag, String title, String ID) {
         this.category = category;
         this.date = date;
         this.description = description;
         this.flag = flag;
         this.title = title;
+        this.id=ID;
     }
 }

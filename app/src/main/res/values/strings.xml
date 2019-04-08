@@ -23,6 +23,7 @@
     <string name="_8942">⋮</string>
     <string name="title">Title</string>
     <string name="category">Category</string>
+    <string name="options">Options</string>
     <string name="date">Date</string>
     <string name="description">Description</string>
     <string name="search_by_button">Search by button</string>
@@ -56,5 +57,9 @@
         <item>Custom</item>
 
     </string-array>
-    
+
+    <string-array name="options">
+        <item>Delete</item>
+        <item>Edit</item>
+    </string-array>
 </resources>
