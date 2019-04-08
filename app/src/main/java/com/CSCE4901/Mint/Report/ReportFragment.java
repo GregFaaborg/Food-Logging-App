@@ -75,47 +75,23 @@ public class ReportFragment extends Fragment {
         StrictMode.setVmPolicy(builder.build());
 
 
+        //ask permission for file access
+        if (!checkFilePermission()) {
+            // Permission is not granted, so asking for permission
 
-        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // Permission is not granted
-            //Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
-            ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
-
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+            askFilePermission();
         }
 
         weekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-
-                FragmentManager fragmentManager = getActivity().getFragmentManager();
-
-                
-                SmoothDateRangePickerFragment smoothDateRangePickerFragment = SmoothDateRangePickerFragment.newInstance(
-                        new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
-                            @Override
-                            public void onDateRangeSet(SmoothDateRangePickerFragment view,
-                                                       int yearStart, int monthStart,
-                                                       int dayStart, int yearEnd,
-                                                       int monthEnd, int dayEnd)
-                            {
-                                //get start and end date
-                                String startDate =  (++monthStart) + "/" + dayStart + "/" + yearStart;
-                                String endDate = (++monthEnd) + "/" + dayEnd + "/" + yearEnd;
-
-                                dateRangeQuery(startDate, endDate);
-                            }
-                        });
-
-                smoothDateRangePickerFragment.setMaxDate(Calendar.getInstance());
-                smoothDateRangePickerFragment.show(fragmentManager, "smoothDateRangePicker");
-
-
-
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    customRangePicker();
+                }
 
             }
         });
@@ -123,22 +99,66 @@ public class ReportFragment extends Fragment {
         monthly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                monthPicker();
-
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    monthPicker();
+                }
             }
         });
-
 
         favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFavorites();
+
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    getFavorites();
+                }
+
             }
         });
 
         return view;
     }
 
+    private void askFilePermission(){
+
+        Toast.makeText(getContext(), "File access required for reports", Toast.LENGTH_SHORT).show();
+
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
+    }
+
+    private void customRangePicker(){
+
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getFragmentManager();
+
+        SmoothDateRangePickerFragment smoothDateRangePickerFragment = SmoothDateRangePickerFragment.newInstance(
+                new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
+                    @Override
+                    public void onDateRangeSet(SmoothDateRangePickerFragment view,
+                                               int yearStart, int monthStart,
+                                               int dayStart, int yearEnd,
+                                               int monthEnd, int dayEnd)
+                    {
+                        //get start and end date
+                        String startDate =  (++monthStart) + "/" + dayStart + "/" + yearStart;
+                        String endDate = (++monthEnd) + "/" + dayEnd + "/" + yearEnd;
+
+                        dateRangeQuery(startDate, endDate);
+                    }
+                });
+
+        smoothDateRangePickerFragment.setMaxDate(Calendar.getInstance());
+        smoothDateRangePickerFragment.show(fragmentManager, "smoothDateRangePicker");
+    }
 
     private void monthPicker() {
         final Calendar date = Calendar.getInstance();
@@ -186,6 +206,7 @@ public class ReportFragment extends Fragment {
 
         String email = getUserEmail();
 
+        assert email != null;
         db.collection(email)
                 .whereGreaterThanOrEqualTo("date", begin)
                 .whereLessThanOrEqualTo("date", end)
@@ -211,7 +232,7 @@ public class ReportFragment extends Fragment {
                                 entryData.append("Date: ").append(document.getString("date")).append("\n");
                                 entryData.append("Category: ").append(document.getString("category")).append("\n");
                                 favorite = document.getString("flag");
-                                favorite = favorite.equals("0") ? "No" : "Yes";
+                                favorite = Objects.equals(favorite, "0") ? "No" : "Yes";
                                 entryData.append("Favorite: ").append(favorite).append("\n");
                                 entryData.append("Description: ").append(document.getString("description")).append("\n");
                                 entryData.append("\n");
@@ -239,8 +260,7 @@ public class ReportFragment extends Fragment {
         FirebaseUser user =  mAuth.getCurrentUser();
 
         if(user != null) {
-            String email = user.getEmail();
-            return email;
+            return user.getEmail();
         }
 
         return null;
@@ -251,6 +271,7 @@ public class ReportFragment extends Fragment {
         //createPDF("Favorites ", "");
 
         String email = getUserEmail();
+        assert email != null;
         db.collection(email)
                 .whereEqualTo("flag", "1")
                 .get()
@@ -275,7 +296,7 @@ public class ReportFragment extends Fragment {
                                 entryData.append("Date: ").append(document.getString("date")).append("\n");
                                 entryData.append("Category: ").append(document.getString("category")).append("\n");
                                 favorite = document.getString("flag");
-                                favorite = favorite.equals("0") ? "No" : "Yes";
+                                favorite = Objects.equals(favorite, "0") ? "No" : "Yes";
                                 entryData.append("Favorite: ").append(favorite).append("\n");
                                 entryData.append("Description: ").append(document.getString("description")).append("\n");
                                 entryData.append("\n");
@@ -305,5 +326,11 @@ public class ReportFragment extends Fragment {
 
     }
 
+
+    private boolean checkFilePermission(){
+
+        //returns true if file access permissions are allowed, false otherwise
+        return ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
 
 }

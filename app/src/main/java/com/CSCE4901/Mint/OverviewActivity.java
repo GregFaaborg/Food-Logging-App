@@ -4,21 +4,16 @@ import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.CSCE4901.Mint.Entry.EntryFragment;
 import com.CSCE4901.Mint.Home.HomeFragment;
 import com.CSCE4901.Mint.Report.ReportFragment;
 import com.CSCE4901.Mint.Search.SearchFragment;
 import com.CSCE4901.Mint.User.UserFragment;
-
-import java.util.Objects;
-import java.util.TimerTask;
 
 public class OverviewActivity extends AppCompatActivity {
 
@@ -67,8 +62,6 @@ public class OverviewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
-
-
 
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
