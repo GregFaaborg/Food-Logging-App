@@ -7,10 +7,12 @@
 
     <Button
         android:id="@+id/weekly_report"
-        android:layout_width="match_parent"
+        android:layout_width="265dp"
         android:layout_height="wrap_content"
         android:layout_below="@+id/favorites_report"
-        android:layout_marginTop="411dp"
+        android:layout_alignParentStart="true"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="57dp"
         android:background="@color/colorPrimaryDark"
         android:text="Custom Range Report"
         android:textAlignment="center"
@@ -18,8 +20,12 @@
 
     <Button
         android:id="@+id/monthly_report"
-        android:layout_width="match_parent"
+        android:layout_width="261dp"
         android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/weekly_report"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="144dp"
+        android:layout_marginEnd="-1dp"
         android:background="@color/colorPrimaryDark"
         android:text="Monthly Report"
         android:textAlignment="center"
@@ -27,8 +33,12 @@
 
     <Button
         android:id="@+id/favorites_report"
-        android:layout_width="match_parent"
+        android:layout_width="263dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/monthly_report"
+        android:layout_alignEnd="@+id/monthly_report"
+        android:layout_marginTop="58dp"
+        android:layout_marginEnd="0dp"
         android:background="@color/colorPrimaryDark"
         android:text="Favorites Report"
         android:textAlignment="center"

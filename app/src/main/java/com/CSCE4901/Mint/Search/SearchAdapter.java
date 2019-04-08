@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.CSCE4901.Mint.Home.HomeFragment;
 import com.CSCE4901.Mint.R;
 import com.CSCE4901.Mint.update_entry;
 import com.google.firebase.auth.FirebaseAuth;
@@ -140,51 +141,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
                 mContext.startActivity(goIntent);
-                /*
-                DocumentReference updatedDoc = db.collection(UserEmail).document(ID);
-                updatedDoc.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    //If the user is able to get data from the database
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        //Check if the document exists in the database
-                        if (documentSnapshot.exists()) {
-                            //get document fields
-                            TITLE=documentSnapshot.getString("title");
-                            CAT=documentSnapshot.getString("category");
-                            DES=documentSnapshot.getString("description");
-                            FLAG=documentSnapshot.getString("flag");
-                            DATE=documentSnapshot.getString("date");
-                            //output the data in the text views of the page
-                            first.setText(FIRST);
-                            last.setText(LAST);
-                            docEmail.setText(docEMAIL);
-                            emailDB.setText(email);
-                        }
-                    }
-                });
-                */
-                //get Updated stuff
-                /*String editTitle = "Title: "+mItems.get(position).title;
-                holder.mTitle.setText(editTitle);
-                String editCat = "Category: "+mItems.get(position).category;
-                holder.mTitle.setText(editCat);
-                String editDes = "Description:\n"+mItems.get(position).description;
-                holder.mTitle.setText(editDes);
-                String editDate = "Date: "+mItems.get(position).date;
-                holder.mTitle.setText(editDate);
+                Intent homeIntent = new Intent(mContext, HomeFragment.class);
+                mContext.startActivity(homeIntent);
 
-                String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
-
-                //Toast.makeText(mContext, FlagHolder, Toast.LENGTH_SHORT).show();
-
-                if(FlagHolder.equals("1")) {
-                    //MAKE FLAG STAR YELLOW
-                    holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
-                }
-                else {
-                    //MAKE FLAG STAR TO NORMAL DEFAULT COLOR
-                    holder.mFlag.setColorFilter(Color.parseColor("#696969"));
-                }*/
 
 
             }

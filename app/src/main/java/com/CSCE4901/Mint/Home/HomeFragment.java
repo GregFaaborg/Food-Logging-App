@@ -53,6 +53,7 @@ public class HomeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false); //connect to XML fragment_home
 
+
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
         final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM d, yyyy");
@@ -140,6 +141,8 @@ public class HomeFragment extends Fragment {
                                     }
                                     mAdapter = new SearchAdapter(arrItems);
                                     mRecyclerView.setAdapter(mAdapter);
+
+                                    //mAdapter.notifyDataSetChanged();
                                 } else {
                                     Log.w(TAG, "Error getting documents.", task.getException());
                                 }
@@ -149,7 +152,10 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
+
         return view;
 
     }
+
 }

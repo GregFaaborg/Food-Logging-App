@@ -318,6 +318,8 @@ public class update_entry extends AppCompatActivity{
                         Toast.makeText(update_entry.this, String.format("Updating Entry"), Toast.LENGTH_SHORT).show();
                         //go back to home fragment
                         finish();
+
+
                     }
                 }
             });
