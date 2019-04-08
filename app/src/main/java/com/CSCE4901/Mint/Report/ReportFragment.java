@@ -1,29 +1,23 @@
 package com.CSCE4901.Mint.Report;
 
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
+import android.Manifest;
+import android.app.FragmentManager;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.app.AppCompatDialogFragment;
-import android.support.v7.widget.AppCompatTextView;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.DatePicker;
 import android.widget.Toast;
 
-
-import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -32,21 +26,17 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.type.DayOfWeek;
+import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
+import com.whiteelephant.monthpicker.MonthPickerDialog;
 
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
-import com.whiteelephant.monthpicker.MonthPickerDialog;
 
 
-
-public class ReportFragment extends Fragment{
+public class ReportFragment extends Fragment {
 
     View view;
 
@@ -56,11 +46,10 @@ public class ReportFragment extends Fragment{
 
     FirebaseFirestore db;
 
-    public static final int REQUEST_CODE = 1;  // Used to identify the result
+    //for requesting permissions to access files
+    private static final int REQUEST_CODE = 22;
 
-    public ReportFragment() {
-        // Required empty public constructor
-    }
+
 
 
     @Override
@@ -77,21 +66,32 @@ public class ReportFragment extends Fragment{
         //get instance of firestore database
         db = FirebaseFirestore.getInstance();
 
-        final FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getSupportFragmentManager();
-
 
         weekly = view.findViewById(R.id.weekly_report);
         monthly = view.findViewById(R.id.monthly_report);
         favorites = view.findViewById(R.id.favorites_report);
 
+        StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
+        StrictMode.setVmPolicy(builder.build());
+
+
+        //ask permission for file access
+        if (!checkFilePermission()) {
+            // Permission is not granted, so asking for permission
+
+            askFilePermission();
+        }
+
         weekly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                AppCompatDialogFragment appCompatDialogFragment = new DatePickerFragment();
-
-                appCompatDialogFragment.setTargetFragment(ReportFragment.this, REQUEST_CODE);
-                appCompatDialogFragment.show(fragmentManager,"Select Week");
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    customRangePicker();
+                }
 
             }
         });
@@ -99,68 +99,66 @@ public class ReportFragment extends Fragment{
         monthly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                monthPicker();
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    monthPicker();
+                }
             }
         });
-
 
         favorites.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getFavorites();
+
+                if (!checkFilePermission()){
+                    askFilePermission();
+                }
+                else {
+                    getFavorites();
+                }
+
             }
         });
 
         return view;
     }
 
+    private void askFilePermission(){
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        // check for the results
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // get date from string
-            String selectedDate = data.getStringExtra("selectedDate");
+        Toast.makeText(getContext(), "File access required for reports", Toast.LENGTH_SHORT).show();
 
-            getWeekRange(selectedDate);
-        }
+        ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
+                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE);
+
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
     }
 
-    private void getWeekRange(String selectedDate) {
+    private void customRangePicker(){
 
-        SimpleDateFormat sdf = new SimpleDateFormat("M/dd/yyyy", Locale.US);
+        FragmentManager fragmentManager = Objects.requireNonNull(getActivity()).getFragmentManager();
 
-        Date date;
-        Calendar cal = Calendar.getInstance();
+        SmoothDateRangePickerFragment smoothDateRangePickerFragment = SmoothDateRangePickerFragment.newInstance(
+                new SmoothDateRangePickerFragment.OnDateRangeSetListener() {
+                    @Override
+                    public void onDateRangeSet(SmoothDateRangePickerFragment view,
+                                               int yearStart, int monthStart,
+                                               int dayStart, int yearEnd,
+                                               int monthEnd, int dayEnd)
+                    {
+                        //get start and end date
+                        String startDate =  (++monthStart) + "/" + dayStart + "/" + yearStart;
+                        String endDate = (++monthEnd) + "/" + dayEnd + "/" + yearEnd;
 
-        try {
+                        dateRangeQuery(startDate, endDate);
+                    }
+                });
 
-            //parse selected date and set date to that
-            date = sdf.parse(selectedDate);
-            cal.setTime(date);
-
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        //set date to sunday (minimum day of week)
-        cal.set(Calendar.DAY_OF_WEEK, cal.getActualMinimum(Calendar.DAY_OF_WEEK));
-
-        //getting first day of week
-        Date firstDay = cal.getTime();
-        String firstDayOfWeek = sdf.format(firstDay);
-
-        //Add 6 days to first day of week to get last day
-        cal.add(Calendar.DAY_OF_WEEK, 6);
-        String lastDayOfWeek= sdf.format(cal.getTime());
-
-
-        //Printing Week range
-        Toast.makeText(getContext(), firstDayOfWeek + " - " + lastDayOfWeek, Toast.LENGTH_SHORT).show();
-
-        dateRangeQuery(firstDayOfWeek, lastDayOfWeek);
+        smoothDateRangePickerFragment.setMaxDate(Calendar.getInstance());
+        smoothDateRangePickerFragment.show(fragmentManager, "smoothDateRangePicker");
     }
-
 
     private void monthPicker() {
         final Calendar date = Calendar.getInstance();
@@ -187,9 +185,10 @@ public class ReportFragment extends Fragment{
                 date.set(Calendar.DAY_OF_MONTH, date.getActualMaximum(Calendar.DAY_OF_MONTH));
                 String lastDayOfMonth = sdf.format(date.getTime());
 
-                Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
 
                 dateRangeQuery(firstDayOfMonth, lastDayOfMonth);
+
 
             }
         }, date.get(Calendar.YEAR), date.get(Calendar.MONTH));
@@ -201,9 +200,13 @@ public class ReportFragment extends Fragment{
                 .show();
     }
 
-    private void dateRangeQuery(String begin, String end){
+    private void dateRangeQuery(final String begin, final String end){
+
+
 
         String email = getUserEmail();
+
+        assert email != null;
         db.collection(email)
                 .whereGreaterThanOrEqualTo("date", begin)
                 .whereLessThanOrEqualTo("date", end)
@@ -211,21 +214,43 @@ public class ReportFragment extends Fragment{
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        TemplatePDF templatePDF;
+                        //constructor for PDF
+                        templatePDF = new TemplatePDF(getContext());
+
+                        createPDF(templatePDF,"for dates ",begin + " to " + end);
+
+                        StringBuilder entryData = new StringBuilder();
+                        String favorite;
+
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
                                 Log.d("Month", document.getId() + " => " + document.getData());
+                                entryData.append("Title: ").append(document.getString("title")).append("\n");
+                                entryData.append("Date: ").append(document.getString("date")).append("\n");
+                                entryData.append("Category: ").append(document.getString("category")).append("\n");
+                                favorite = document.getString("flag");
+                                favorite = Objects.equals(favorite, "0") ? "No" : "Yes";
+                                entryData.append("Favorite: ").append(favorite).append("\n");
+                                entryData.append("Description: ").append(document.getString("description")).append("\n");
+                                entryData.append("\n");
+
+                                String finalEntryData = entryData.toString();
+                                templatePDF.addParagraph(finalEntryData);
+
                             }
+                            templatePDF.closeDocument();
+                            templatePDF.viewPDF();
                         }
                         else {
+
+                            Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
                             Log.d("Month", "Error getting documents: ", task.getException());
                         }
                     }
                 });
-
-
-
-
 
     }
 
@@ -235,8 +260,7 @@ public class ReportFragment extends Fragment{
         FirebaseUser user =  mAuth.getCurrentUser();
 
         if(user != null) {
-            String email = user.getEmail();
-            return email;
+            return user.getEmail();
         }
 
         return null;
@@ -244,24 +268,69 @@ public class ReportFragment extends Fragment{
 
     private void getFavorites() {
 
+        //createPDF("Favorites ", "");
+
         String email = getUserEmail();
+        assert email != null;
         db.collection(email)
                 .whereEqualTo("flag", "1")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                        TemplatePDF templatePDF;
+                        //constructor for PDF
+                        templatePDF = new TemplatePDF(getContext());
+
+                        createPDF(templatePDF, "Favorites", "");
+
+                        StringBuilder entryData = new StringBuilder();
+                        String favorite;
+
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
                                 Log.d("Favorites", document.getId() + " => " + document.getData());
+                                entryData.append("Title: ").append(document.getString("title")).append("\n");
+                                entryData.append("Date: ").append(document.getString("date")).append("\n");
+                                entryData.append("Category: ").append(document.getString("category")).append("\n");
+                                favorite = document.getString("flag");
+                                favorite = Objects.equals(favorite, "0") ? "No" : "Yes";
+                                entryData.append("Favorite: ").append(favorite).append("\n");
+                                entryData.append("Description: ").append(document.getString("description")).append("\n");
+                                entryData.append("\n");
+
+                                String finalEntryData = entryData.toString();
+                                templatePDF.addParagraph(finalEntryData);
+
+
                             }
+                            templatePDF.closeDocument();
+                            templatePDF.viewPDF();
                         }
                         else {
                             Log.d("Favorites", "Error getting documents: ", task.getException());
                         }
                     }
                 });
+
+    }
+
+    private void createPDF(TemplatePDF templatePDF,String subTitle, String dateRange)
+    {
+
+        templatePDF.openDocument();
+        templatePDF.addMetaData("Report", "Entries Report", "Mint App");
+        templatePDF.addTitles("Mint Report", subTitle, dateRange);
+
+    }
+
+
+    private boolean checkFilePermission(){
+
+        //returns true if file access permissions are allowed, false otherwise
+        return ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }
 
 }

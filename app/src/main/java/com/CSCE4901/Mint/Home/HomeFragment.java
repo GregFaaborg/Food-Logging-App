@@ -28,6 +28,7 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import static android.content.ContentValues.TAG;
@@ -55,10 +56,12 @@ public class HomeFragment extends Fragment {
 
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
-        final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM, d, yyyy");
+        final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM d, yyyy");
 
         //initialize calendar view
         CAL=view.findViewById(R.id.home_calendar);
+        Calendar now = Calendar.getInstance();
+        CAL.setMaxDate(now.getTimeInMillis());
 
         //initialize Fire base Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -144,8 +147,6 @@ public class HomeFragment extends Fragment {
 
             }
         });
-
-
 
         return view;
 

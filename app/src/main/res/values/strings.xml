@@ -1,13 +1,5 @@
 <resources>
     <string name="app_name">Mint</string>
-    <string name="bar_home">Home</string>
-    <string name="bar_cal">Calendar</string>
-    <string name="bar_entry">New Entry</string>
-    <string name="bar_search">Search</string>
-    <string name="bar_report">Report</string>
-    <string name="radio_title">Title</string>
-    <string name="radio_date">Date</string>
-    <string name="radio_flagged">Flagged</string>
     <string name="search_bar">Search</string>
 
     <string-array name="search_options">

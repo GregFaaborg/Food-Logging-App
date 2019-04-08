@@ -15,8 +15,6 @@ import com.CSCE4901.Mint.Report.ReportFragment;
 import com.CSCE4901.Mint.Search.SearchFragment;
 import com.CSCE4901.Mint.User.UserFragment;
 
-import java.util.Objects;
-
 public class OverviewActivity extends AppCompatActivity {
 
 
@@ -65,8 +63,6 @@ public class OverviewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_overview);
 
-
-
         BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
@@ -83,12 +79,8 @@ public class OverviewActivity extends AppCompatActivity {
                     launchFragment).commit();
             navigation.setSelectedItemId(R.id.navigation_home);
         }
-
-
-
-
-
-
     }
+
+
 
 }
