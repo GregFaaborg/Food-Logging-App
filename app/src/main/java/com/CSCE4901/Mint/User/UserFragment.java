@@ -81,6 +81,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         //get email of signed in user
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        assert currentUser != null;
         email = currentUser.getEmail();
 
 
