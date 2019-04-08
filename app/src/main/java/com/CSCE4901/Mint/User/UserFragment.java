@@ -1,28 +1,28 @@
 package com.CSCE4901.Mint.User;
 
-/* import android.content.Context; */
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-/* import android.text.TextUtils;  */
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-/* import android.widget.EditText; */
+import android.widget.EditText;
 import android.widget.TextView;
-/* import android.widget.Toast; */
+import android.widget.Toast;
 
 import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
-/* import com.google.android.gms.tasks.OnCompleteListener; */
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-/* import com.google.android.gms.tasks.Task; */
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-/* import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
-import com.google.firebase.auth.FirebaseAuthUserCollisionException; */
+import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
+import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -30,7 +30,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
-/* import java.util.Objects; */
+import java.util.Objects;
 
 public class UserFragment extends Fragment implements View.OnClickListener {
 
@@ -41,19 +41,19 @@ public class UserFragment extends Fragment implements View.OnClickListener {
     TextView last;
     TextView emailDB;
     TextView docEmail;
-   /* EditText etNewEmail;*/
+    EditText etNewEmail;
 
     String email;
     String FIRST="first name";
     String LAST="last name";
     String docEMAIL="docs email";
 
-    /*FirebaseAuth mAuth;
-    FirebaseUser fbUser; */
+    FirebaseAuth mAuth;
+    FirebaseUser fbUser;
 
     FirebaseAuth firebaseAuth;
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
-    /* Context mContext; */
+    Context mContext;
 
 
     @Nullable
@@ -69,12 +69,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         docEmail=view.findViewById(R.id.doc);
 
         //Update for email
-        /* etNewEmail=view.findViewById(R.id.user_email);
+        etNewEmail=view.findViewById(R.id.user_email);
         update=view.findViewById(R.id.update_button);
 
 
         mAuth = FirebaseAuth.getInstance();
-        fbUser = mAuth.getCurrentUser(); */
+        fbUser = mAuth.getCurrentUser();
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -116,7 +116,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    /*private void setUpdate() {
+    private void setUpdate() {
 
         String oldEmail = emailDB.getText().toString();
         String newEmail = etNewEmail.getText().toString();
@@ -188,7 +188,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         }
 
-    } */
+    } 
 
     @Override
     public void onClick(View v) {
