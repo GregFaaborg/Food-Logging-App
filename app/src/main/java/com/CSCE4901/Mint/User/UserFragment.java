@@ -117,7 +117,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         return view;
     }
 
-    private void setUpdate() {
+    public void setUpdate() {
 
         String oldEmail = emailDB.getText().toString();
         String newEmail = etNewEmail.getText().toString();
@@ -199,7 +199,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 //send user to login screen
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().startActivity(intent);
+                Objects.requireNonNull(getActivity()).startActivity(intent);
                 getActivity().finish();
 
                 FirebaseAuth.getInstance().signOut();
