@@ -38,6 +38,7 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
         mXImage = (ImageView) itemView.findViewById(R.id.xImage);
         mDelImage = (ImageView) itemView.findViewById(R.id.delImage);
 
+
     }
 }
 

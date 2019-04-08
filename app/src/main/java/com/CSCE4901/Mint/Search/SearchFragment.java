@@ -15,7 +15,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +22,6 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -59,6 +57,8 @@ public class SearchFragment extends Fragment {
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+
 
         //TODO implement recylerview to show search results
 
@@ -104,7 +104,7 @@ public class SearchFragment extends Fragment {
                                 if (task.isSuccessful()) {
                                     ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
                                     for (QueryDocumentSnapshot document : task.getResult()) {
-                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title")));
+                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
                                         Log.d(TAG, document.getId() + " => " + document.getData());
                                     }
                                     mAdapter = new SearchAdapter(arrItems);

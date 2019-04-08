@@ -59,7 +59,7 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                     android:layout_below="@+id/entry_title"
                     />
-                
+
                 <Spinner
                     android:id="@+id/entry_category"
                     android:layout_below="@+id/entry_title"
@@ -73,6 +73,14 @@
 
                 <EditText
                     android:id="@+id/custom_category"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/entry_category_text"
+                    android:hint="@string/custom_category"
+                    android:visibility="gone"
+                    />
+                <EditText
+                    android:id="@+id/custom_category2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/entry_category_text"
@@ -103,7 +111,7 @@
 
 
         <Button
-            android:id="@+id/entry_add_button"
+            android:id="@+id/update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/entry_card"
@@ -115,10 +123,26 @@
             android:layout_marginEnd="-3dp"
             android:layout_marginRight="-4dp"
             android:backgroundTint="@color/colorPrimaryDark"
-            android:text="@string/add_entry"
+            android:text="Update Entry"
             android:textColor="@android:color/white"
             android:textSize="18sp" />
 
+        <Button
+            android:id="@+id/cancel_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/update_button"
+            android:layout_alignStart="@+id/entry_card"
+            android:layout_alignEnd="@id/entry_card"
+            android:layout_marginStart="-5dp"
+            android:layout_marginLeft="-4dp"
+            android:layout_marginTop="1dp"
+            android:layout_marginEnd="-3dp"
+            android:layout_marginRight="-4dp"
+            android:backgroundTint="@color/colorPrimaryDark"
+            android:text="Cancel"
+            android:textColor="@android:color/white"
+            android:textSize="18sp" />
     </RelativeLayout>
 
 </ScrollView>

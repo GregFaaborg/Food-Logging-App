@@ -31,7 +31,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Map;
 
 public class EntryFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
@@ -123,7 +122,7 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                         cat = customCategory.getText().toString().trim();
                     }
                     //get all the information in a HashMap
-                    Map<String, Object> data = new HashMap<>();
+                    HashMap<String, Object> data = new HashMap<>();
                     data.put("title", title);
                     data.put("category", cat);
                     data.put("description", des);
