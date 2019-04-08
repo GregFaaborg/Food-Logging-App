@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -9,7 +9,8 @@
         android:id="@+id/weekly_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
+        android:layout_below="@+id/favorites_report"
+        android:layout_marginTop="411dp"
         android:background="@color/colorPrimaryDark"
         android:text="Custom Range Report"
         android:textAlignment="center"
@@ -19,7 +20,6 @@
         android:id="@+id/monthly_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
         android:background="@color/colorPrimaryDark"
         android:text="Monthly Report"
         android:textAlignment="center"
@@ -29,11 +29,10 @@
         android:id="@+id/favorites_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="12dp"
         android:background="@color/colorPrimaryDark"
         android:text="Favorites Report"
         android:textAlignment="center"
         android:textColor="#fff" />
 
 
-</LinearLayout>
+</RelativeLayout>
