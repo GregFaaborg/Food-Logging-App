@@ -1,7 +1,6 @@
 package com.CSCE4901.Mint.Search;
 
 
-
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -15,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
 
 import com.CSCE4901.Mint.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.jaredrummler.materialspinner.MaterialSpinner;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,13 @@ public class SearchFragment extends Fragment {
     SearchAdapter mAdapter;
     private ProgressDialog progressDialog;
 
+
+    MaterialSpinner materialSpinner;
+
+    //filter option title by default
+    String filterOption = "title";
+
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -51,30 +59,24 @@ public class SearchFragment extends Fragment {
         progressDialog.setMessage("Searching...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.search_results);
+        mRecyclerView = view.findViewById(R.id.search_results);
         mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
+        materialSpinner = view.findViewById(R.id.options_spinner);
 
+        materialSpinner.setItems("Title", "Category", "Description", "Date");
+        materialSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
 
-        //TODO implement recylerview to show search results
-
-        /*
-        TODO maybe use spinner for selecting filter options or use radio buttons
-        final Spinner spinner = view.findViewById(R.id.search_spinner);
-
-
-        setting up spinner for search options (flagged, date, title)
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource
-                (getContext(),R.array.search_options, android.R.layout.simple_spinner_dropdown_item);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(arrayAdapter);
-
-        */
-
+                //get filter option from spinner option dropdown
+                filterOption = item.toString().toLowerCase();
+            }
+        });
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +97,7 @@ public class SearchFragment extends Fragment {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
                 db.collection(UserEmail)
-                        .whereEqualTo("title", s)
+                        .whereEqualTo(filterOption, s)
                         .get()
                         .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                             @Override
