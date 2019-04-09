@@ -24,6 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -47,7 +48,7 @@ public class update_entry extends AppCompatActivity{
         String flagged = "0";//default set to false
 
         String DATE;
-        String tempDATE;
+
         CalendarView CAL;
 
         FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
@@ -91,6 +92,7 @@ public class update_entry extends AppCompatActivity{
                     R.array.categories, android.R.layout.simple_spinner_item);
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             CAT.setAdapter(arrayAdapter);
+
             CAT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -169,6 +171,7 @@ public class update_entry extends AppCompatActivity{
                 //customCategory2.setText(tempCat);
                 //customCategory2.setVisibility(View.VISIBLE);
             }
+
             if(tempCat.equals("Breakfast") || "Lunch".equals(tempCat)|| "Dinner".equals(tempCat) || "Snack".equals(tempCat))
             {
                 //Toast.makeText(update_entry.this, tempCat, Toast.LENGTH_LONG).show();
@@ -188,48 +191,24 @@ public class update_entry extends AppCompatActivity{
             }
 
             //set date picker of calendar to OG date
-            tempDATE= data.get("date");
             DATE=data.get("date");
-            tempDATE+="/";
-            int month=0;
-            int day=0;
-            int year=0;
-            int count = 0; //set / count to 0
-            String temp=""; //store string chars until /
-            for(int i=0; i<tempDATE.length(); i++) {
-                if(tempDATE.charAt(i) == '/'){ //if '/'
-                    count=count+1; //increment count
-                    if(count==1){
-                       month = Integer.parseInt(temp);
-                       temp="";
-                       //Toast.makeText(update_entry.this, String.format("Month: "+month), Toast.LENGTH_LONG).show();
-                    }
-                    if(count==2) {
-                        day = Integer.parseInt(temp);
-                        temp="";
-                        //Toast.makeText(update_entry.this, String.format("Day: "+day), Toast.LENGTH_LONG).show();
-                    }
-                    if(count==3) {
-                        year = Integer.parseInt(temp);
-                        temp="";
-                        //Toast.makeText(update_entry.this, String.format("Year: "+year), Toast.LENGTH_LONG).show();
-                    }
-                }
-                else {
-                    if(temp.equals("")) {
-                        temp=Character.toString(tempDATE.charAt(i));
-                    }
-                    else {
-                        temp += tempDATE.charAt(i);
-                    }
-                }
-            }
+            String dateParts[] = DATE.split("/");
 
-            /*CAL.OnContextClickListener
-                    setDate(now.set(year,month,day)); //year, month, date
-            */
+            int month = Integer.parseInt(dateParts[0]);
+            int day = Integer.parseInt(dateParts[1]);
+            int year = Integer.parseInt(dateParts[2]);
 
-            //CAL.setDate(2-122019-1900);
+            Calendar calendar = Calendar.getInstance();
+            calendar.set(Calendar.MONTH, month);
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+            calendar.set(Calendar.YEAR, year);
+
+            long milliTime = calendar.getTimeInMillis();
+
+            CAL.setDate(milliTime, true,true);
+
+
+
 
             //flag from OG entry
             final String tempFlag = data.get("flag");
