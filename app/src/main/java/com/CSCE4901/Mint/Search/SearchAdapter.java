@@ -2,6 +2,7 @@ package com.CSCE4901.Mint.Search;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -18,9 +19,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     private ArrayList<SearchItem> mItems;
-    private SearchAdapter mAdapter;
+    private Context mContext;
     FirebaseAuth firebaseAuth; //auth decleration
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
@@ -28,12 +31,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     String CAT;
     String DES;
     String FLAG;
-    String DATE;
+    //String DATE;
+    int editCHECK=0;
 
-    Context mContext;
-    public SearchAdapter(ArrayList itemList, SearchAdapter adapter) {
+    public SearchAdapter(ArrayList itemList) {
+        //mAdapter = adapter;
         mItems = itemList;
-        mAdapter = adapter;
+    }
+
+    public void updatedList(ArrayList<SearchItem> mItems)
+    {
+        mItems.clear();
+        mItems.addAll(mItems);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -42,11 +52,17 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         mContext = parent.getContext();
         SearchViewHolder holder = new SearchViewHolder(v);
 
+
+
         return holder;
     }
 
     @Override
     public void onBindViewHolder(final SearchViewHolder holder, final int position) {
+
+        SharedPreferences.Editor editor = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+        editor.putInt("CHECK",0); //set as false aka not finished
+        editor.apply();
 
         //get item and concatenize with their appropriate option
         String titleHolder="Title: "+mItems.get(position).title;
@@ -75,10 +91,11 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
             holder.mFlag.setColorFilter(Color.parseColor("#696969"));
         }
 
+
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(mContext, String.format("%d", position + 1), Toast.LENGTH_SHORT).show();
+               //Toast.makeText(mContext, String.format("%d", position + 1), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -112,6 +129,8 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
                 //visible options button
                 holder.mOPT.setVisibility(View.VISIBLE);
+
+                //updatedList(mItems);
             }
         });
 
@@ -125,7 +144,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
 
-                String ID= mItems.get(position).id;
+                final String ID= mItems.get(position).id;
+                final String date = mItems.get(position).date;
+
 
                 //get all the information in a HashMap
                 HashMap<String, String> data = new HashMap<>();
@@ -142,7 +163,60 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
                 mContext.startActivity(goIntent);
-                mAdapter.notifyDataSetChanged();
+
+                //mAdapter.notifyDataSetChanged();
+                //int check = go(position);
+                /*SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
+                int CHECK=pref.getInt("CHECK",0);//
+                while(check!=CHECK)
+                {
+                    Toast.makeText(mContext, String.format("DIFF"), Toast.LENGTH_SHORT).show();
+                    if(check==CHECK) {
+                        Toast.makeText(mContext, String.format("SAME"), Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    CHECK=pref.getInt("CHECK",0);
+                }*/
+
+
+/*
+                //Intent newIntent = new Intent(SearchAdapter.this, );
+                Intent goIntent = new Intent(mContext, update_entry.class);
+                goIntent.putExtra("key", data); //send data hashMap
+                mContext.startActivity(goIntent);
+
+                */
+                    /*Toast.makeText(mContext, String.format("CF: "+checkFinish), Toast.LENGTH_SHORT).show();
+                    if(checkFinish==1) {
+                            Toast.makeText(mContext, String.format("CF::" + checkFinish), Toast.LENGTH_SHORT).show();
+
+                        }
+                    else {
+                        mContext.startActivity(goIntent);
+                        checkFinish = prefs.getInt("CHECK",0); //get int
+                    }*/
+
+
+                /*Toast.makeText(mContext, String.format(""+UserEmail), Toast.LENGTH_SHORT).show();
+                DocumentReference DOC = db.collection(UserEmail).document(ID);
+                DOC.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    //If the user is able to get data from the database
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        DocumentSnapshot document = task.getResult();
+                        //Check if the document exists in the database
+                        final String DATE = document.getString("date");
+                        if (DATE.equals(date)) {
+                            Toast.makeText(mContext, String.format("" + DATE), Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(mContext, String.format(""+DATE+" NOT THE SAME DATE "+date), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });*/
+
+                //Toast.makeText(mContext, String.format(""+DATE), Toast.LENGTH_SHORT).show();
+
 
             }
         });
@@ -171,11 +245,36 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
             }
         });
 
+        /*int CHECK=go(position);
+        while(CHECK!=1)
+        {
+            if(CHECK==1)
+            {
+                Toast.makeText(mContext, String.format("CHECK: "+CHECK), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                CHECK=go(position);
+            }
+        }*/
+
     }
+
+
 
     @Override
     public int getItemCount() {
         return mItems.size();
     }
+
+    /*public int go(int position) {
+
+        SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
+        int CHECK = pref.getInt("CHECK", 0);//
+        //Toast.makeText(mContext, String.format("CHECK:  "+CHECK), Toast.LENGTH_SHORT).show();
+
+        SearchAdapter.this.notifyDataSetChanged();
+        return 0;
+
+    }*/
 
 }

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F0F3F3">
@@ -50,5 +51,29 @@
         android:textColor="@color/colorPrimary"
         android:textSize="18sp"
         android:textStyle="bold" />
+
+    <ImageButton
+        android:id="@+id/RE"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_alignStart="@+id/DATE"
+        android:layout_alignEnd="@+id/DATE"
+        android:layout_alignBottom="@+id/DATE"
+        android:layout_marginStart="349dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="340dp"
+        android:background="@null"
+        android:tint="@color/colorPrimaryDark"
+        app:srcCompat="@drawable/circle" />
+
+    <ImageView
+        android:id="@+id/REimage"
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignEnd="@+id/RE"
+        android:layout_alignBottom="@+id/RE"
+        android:layout_marginEnd="-2dp"
+        android:layout_marginBottom="0dp"
+        app:srcCompat="@drawable/refresh" />
 
 </RelativeLayout>

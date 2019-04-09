@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CalendarView;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.CSCE4901.Mint.R;
@@ -41,6 +42,7 @@ public class HomeFragment extends Fragment {
     String pickedDate;
     String displayPickedDate;
     CalendarView CAL;
+    ImageButton RE;
 
     FirebaseFirestore db=FirebaseFirestore.getInstance(); //connect to firebase db
 
@@ -59,9 +61,12 @@ public class HomeFragment extends Fragment {
         final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM d, yyyy");
 
         //initialize calendar view
-        CAL=view.findViewById(R.id.home_calendar);
+        CAL = view.findViewById(R.id.home_calendar);
         Calendar now = Calendar.getInstance();
         CAL.setMaxDate(now.getTimeInMillis());
+
+        //refresh button initialize
+        RE = view.findViewById(R.id.RE);
 
         //initialize Fire base Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -79,45 +84,42 @@ public class HomeFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
         String UserEmail = currentUser.getEmail();
 
-        db.collection(UserEmail)
-                .whereEqualTo("date", pickedDate)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                            mAdapter = new SearchAdapter(arrItems, mAdapter);
-                            mRecyclerView.setAdapter(mAdapter);
-
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
+        db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
+                        Log.d(TAG, document.getId() + " => " + document.getData());
                     }
-                });
+                    mAdapter = new SearchAdapter(arrItems);
+                    mRecyclerView.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+
+                } else {
+                    Log.w(TAG, "Error getting documents.", task.getException());
+                }
+            }
+        });
 
         //when date picker is change set the DATe to that chosen date
         CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+            public void onSelectedDayChange(final CalendarView view, int year, int month, int dayOfMonth) {
 
-                int d =dayOfMonth;
-                int m = month+1;
+                int d = dayOfMonth;
+                int m = month + 1;
                 int y = year;
                 String D = String.valueOf(d);
                 String M = String.valueOf(m);
                 String Y = String.valueOf(y);
-                pickedDate=M + "/" + D + "/" + Y;
-                displayPickedDate = DATEformat2.format(new Date(year-1900,month, dayOfMonth));//displayPickedDate = M+","+D+","+Y;
+                pickedDate = M + "/" + D + "/" + Y;
+                displayPickedDate = DATEformat2.format(new Date(year - 1900, month, dayOfMonth));//displayPickedDate = M+","+D+","+Y;
                 displayDATE.setText(displayPickedDate);
                 //Toast.makeText(CAL.getContext(), " "+pickedDate, Toast.LENGTH_LONG).show();
 
@@ -127,33 +129,98 @@ public class HomeFragment extends Fragment {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
 
-                db.collection(UserEmail)
-                        .whereEqualTo("date", pickedDate)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                    }
-                                    mAdapter = new SearchAdapter(arrItems, mAdapter);
-                                    mRecyclerView.setAdapter(mAdapter);
-
-                                    //mAdapter.notifyDataSetChanged();
-                                } else {
-                                    Log.w(TAG, "Error getting documents.", task.getException());
-                                }
+                db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
+                                Log.d(TAG, document.getId() + " => " + document.getData());
                             }
-                        });
+                            mAdapter = null;
+                            mAdapter = new SearchAdapter(arrItems);
+                            mRecyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
 
             }
         });
 
+        RE.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                String UserEmail = currentUser.getEmail();
+                final ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+
+                db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                            mAdapter = null;
+                            mAdapter = new SearchAdapter(arrItems);
+                            mRecyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+                //mItems.addAll(mItems);
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+
 
         return view;
+    }
+
+
+    public void updatedList()
+    {
+        firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        String UserEmail = currentUser.getEmail();
+        final ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+
+        db.collection(UserEmail)
+                .whereEqualTo("date", pickedDate)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            //ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+                            mAdapter =null;
+                            mAdapter = new SearchAdapter(arrItems);
+                            mRecyclerView.setAdapter(mAdapter);
+                            mAdapter.notifyDataSetChanged();
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+        //mItems.addAll(mItems);
+        mAdapter.notifyDataSetChanged();
     }
 
 }
