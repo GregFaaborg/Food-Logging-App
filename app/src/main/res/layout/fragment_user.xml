@@ -52,7 +52,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text= "@string/delete_info"
+        android:text= "@string/delete_account"
         />
 
     <Button
