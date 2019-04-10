@@ -48,6 +48,9 @@
     <string name="entry_description">Description:</string>
     <string name="add_entry">Add Entry</string>
     <string name="entry_title">Title:</string>
+    <string name="delete_button">delete_button</string>
+    <string name="delete_info">Delete Info</string>
+    <string name="delete_account">Delete Account</string>
 
     <string-array name="categories">
         <item>Breakfast</item>
