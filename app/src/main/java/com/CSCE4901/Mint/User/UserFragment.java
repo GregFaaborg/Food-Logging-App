@@ -130,8 +130,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 data.put("doctorEmail",docEMAIL);
 
                 db.collection("users").document(email).set(data);
-                //TOOOOO DOOOOO
-                //do the firebase auth email update
 
         }
 
