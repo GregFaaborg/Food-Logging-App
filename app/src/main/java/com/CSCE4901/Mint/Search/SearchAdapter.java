@@ -103,14 +103,12 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
             @Override
             public void onClick(View v) {
                 //gone options button
-                holder.mOPT.setVisibility(View.GONE);
+                holder.mOPT.setVisibility(View.INVISIBLE);
                 //variables visible XML
                 holder.mEdit.setVisibility(View.VISIBLE);
                 holder.mDel.setVisibility(View.VISIBLE);
                 holder.mX.setVisibility(View.VISIBLE);
-                holder.mDelImage.setVisibility(View.VISIBLE);
-                holder.mXImage.setVisibility(View.VISIBLE);
-                holder.mEditImage.setVisibility(View.VISIBLE);
+
 
             }
 
@@ -120,12 +118,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
             @Override
             public void onClick(View v) {
                 //variables gone XML
-                holder.mEdit.setVisibility(View.GONE);
-                holder.mDel.setVisibility(View.GONE);
-                holder.mX.setVisibility(View.GONE);
-                holder.mDelImage.setVisibility(View.GONE);
-                holder.mXImage.setVisibility(View.GONE);
-                holder.mEditImage.setVisibility(View.GONE);
+                holder.mEdit.setVisibility(View.INVISIBLE);
+                holder.mDel.setVisibility(View.INVISIBLE);
+                holder.mX.setVisibility(View.INVISIBLE);
+
 
                 //visible options button
                 holder.mOPT.setVisibility(View.VISIBLE);
@@ -163,6 +159,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
                 mContext.startActivity(goIntent);
+
 
                 //mAdapter.notifyDataSetChanged();
                 //int check = go(position);

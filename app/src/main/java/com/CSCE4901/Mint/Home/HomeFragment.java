@@ -155,6 +155,7 @@ public class HomeFragment extends Fragment {
         RE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 firebaseAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
@@ -183,8 +184,6 @@ public class HomeFragment extends Fragment {
                 mAdapter.notifyDataSetChanged();
             }
         });
-
-
 
         return view;
     }

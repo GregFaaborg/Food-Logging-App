@@ -15,29 +15,22 @@ public class SearchViewHolder extends RecyclerView.ViewHolder {
     public TextView mDescription;
     public ImageView mFlag;
     public TextView mCat;
-    public ImageButton mEdit;
-    public ImageButton mX;
-    public ImageButton mDel;
+    public Button mEdit;
+    public Button mX;
+    public Button mDel;
     public Button mOPT;
-    public ImageView mEditImage;
-    public ImageView mXImage;
-    public ImageView mDelImage;
 
     public SearchViewHolder(View itemView) {
         super(itemView);
-        mTitle = (TextView) itemView.findViewById(R.id.title);
-        mDate = (TextView) itemView.findViewById(R.id.date);
-        mDescription = (TextView) itemView.findViewById(R.id.description);
-        mFlag = (ImageView) itemView.findViewById(R.id.flag);
-        mCat = (TextView) itemView.findViewById(R.id.cat);
-        mEdit = (ImageButton) itemView.findViewById(R.id.edit);
-        mX = (ImageButton) itemView.findViewById(R.id.x);
-        mDel = (ImageButton) itemView.findViewById(R.id.del);
-        mOPT = (Button) itemView.findViewById(R.id.options);
-        mEditImage = (ImageView) itemView.findViewById(R.id.editImage);
-        mXImage = (ImageView) itemView.findViewById(R.id.xImage);
-        mDelImage = (ImageView) itemView.findViewById(R.id.delImage);
-
+        mTitle =  itemView.findViewById(R.id.title);
+        mDate =  itemView.findViewById(R.id.date);
+        mDescription =  itemView.findViewById(R.id.description);
+        mFlag =  itemView.findViewById(R.id.flag);
+        mCat = itemView.findViewById(R.id.cat);
+        mEdit = itemView.findViewById(R.id.edit_entry);
+        mX = itemView.findViewById(R.id.cancel_options);
+        mDel = itemView.findViewById(R.id.delete_entry);
+        mOPT = itemView.findViewById(R.id.options);
 
     }
 }
