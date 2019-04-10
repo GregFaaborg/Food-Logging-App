@@ -1,7 +1,6 @@
 package com.CSCE4901.Mint;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -288,9 +287,7 @@ public class update_entry extends AppCompatActivity{
 
                         //edit entry toast
                         Toast.makeText(update_entry.this, String.format("Updating Entry"), Toast.LENGTH_SHORT).show();
-                        SharedPreferences.Editor editor = getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
-                        editor.putInt("CHECK", 1);
-                        editor.apply();
+
                         //go back to home fragment
                         //finish();
                         /*Intent goIntent = new Intent(getApplicationContext(), OverviewActivity.class);
@@ -299,7 +296,7 @@ public class update_entry extends AppCompatActivity{
                         */
                         //onResumeFragments();
                         finish();
-                        Toast.makeText(update_entry.this, String.format("testing"), Toast.LENGTH_SHORT).show();
+
 
                     }
                 }
