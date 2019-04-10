@@ -46,14 +46,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:text="@string/update_info"/>
 
-    <Button
-        android:id="@+id/delete_button"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large"
-        android:text= "@string/delete_account"
-        />
 
     <Button
         android:id="@+id/logout_button"
@@ -64,6 +56,17 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
         android:textColor="#ffff"
         android:text="@string/log_out"
+        />
+
+    <Button
+        android:id="@+id/delete_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:text= "@string/delete_account"
+        android:textColor="@android:color/white"
+        android:background="@android:color/holo_red_dark"
         />
 
 </LinearLayout>
