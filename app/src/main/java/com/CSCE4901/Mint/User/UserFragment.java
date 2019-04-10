@@ -54,7 +54,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         last=view.findViewById(R.id.last);
         emailDB=view.findViewById(R.id.email);
         docEmail=view.findViewById(R.id.doc);
-        del=view.findViewById(R.id.delete_button);
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -94,6 +93,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         update.setOnClickListener(this);
 
         //delete account
+        del=view.findViewById(R.id.delete_button);
         del.setOnClickListener(this);
 
         return view;
@@ -104,6 +104,8 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getId()) {
             case R.id.delete_button:
+                //delete account
+
 
             case R.id.logout_button:
 
