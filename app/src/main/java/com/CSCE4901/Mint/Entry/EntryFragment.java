@@ -32,6 +32,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -62,6 +63,8 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
     String des;
 
     String DATE;
+
+    Date timestamp;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
@@ -107,6 +110,8 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
         //get the DATE for default date
         DATE = DATEformat.format(new Date(CAL.getDate()));
 
+        timestamp = new Date(CAL.getDate());
+
         SAVE.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,7 +130,13 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                     //only get custom category if it is selected from the category spinner
                     if(customEnabled){
                         cat = customCategory.getText().toString().trim();
+
                     }
+
+                    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                    assert currentUser != null;
+                    final String UserEmail = currentUser.getEmail();
+
                     //get all the information in a HashMap
                     HashMap<String, Object> data = new HashMap<>();
                     data.put("title", title);
@@ -133,36 +144,38 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                     data.put("description", des);
                     data.put("flag", flagged);
                     data.put("date", DATE);
+                    data.put("timestamp", timestamp);
 
-                    //get email of signed in user
-                    FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                    assert currentUser != null;
-                    final String UserEmail = currentUser.getEmail();
+                    //block below is for Algolia
+                    Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
 
                     assert UserEmail != null;
+
+                    final Index index = client.getIndex(UserEmail);
+
+                    JSONObject object = null;
+                    try {
+                        object = new JSONObject()
+                                .put("title", title)
+                                .put("category", cat)
+                                .put("description", des)
+                                .put("flag", flagged)
+                                .put("date", DATE);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+
+
+
+                    final JSONObject finalObject = object;
                     db.collection(UserEmail).add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
 
-                            Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+                            assert finalObject != null;
+                            index.addObjectAsync(finalObject, documentReference.getId(), null);
 
-                            final Index index = client.getIndex(UserEmail);
-
-                            JSONObject object = null;
-                            try {
-                                object = new JSONObject()
-                                        .put("title", title)
-                                        .put("category", cat)
-                                        .put("description", des)
-                                        .put("flag", flagged)
-                                        .put("date", DATE);
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }
-
-                            assert object != null;
-                            index.addObjectAsync(object, documentReference.getId(), null);
                             Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
@@ -175,11 +188,16 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                     });
                     //clear out edit texts
                     TITLE.setText("");
-                   // CAT.setText("");
+                    //CAT.setText("");
+                    customCategory.setText("");
                     DES.setText("");
                     //set spinner to position 0
                     CAT.setSelection(0);
                     TITLE.setTextColor(Color.BLACK);
+                    FLAG.setColorFilter(Color.parseColor("#696969"));
+                    //FLAG.setBackgroundColor(Color.parseColor("#696969"));
+                    flagged = "0";
+                    customEnabled = false;
                 }
 
 
@@ -219,6 +237,11 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
                 String M = String.valueOf(m);
                 String Y = String.valueOf(y);
                 DATE=M + "/" + D + "/" + Y;
+                try {
+                    timestamp = DATEformat.parse(DATE);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
             }
         });
 
@@ -234,9 +257,13 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
         if (cat.equals("Custom")){
             customCategory.setVisibility(View.VISIBLE);
             customEnabled = true;
+
         } else {
             customCategory.setVisibility(View.GONE);
+            customEnabled = false;
         }
+
+
     }
 
     @Override

@@ -15,17 +15,25 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -49,6 +57,8 @@ public class update_entry extends AppCompatActivity{
         String flagged = "0";//default set to false
 
         String DATE;
+
+        Date timestamp;
 
         CalendarView CAL;
 
@@ -193,7 +203,11 @@ public class update_entry extends AppCompatActivity{
 
             //set date picker of calendar to OG date
             DATE=data.get("date");
-
+            try {
+                timestamp = DATEformat.parse(DATE);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             try {
                 CAL.setDate(new SimpleDateFormat("M/dd/yyyy", Locale.US).parse(DATE).getTime(), true, true);
             } catch (ParseException e) {
@@ -246,8 +260,8 @@ public class update_entry extends AppCompatActivity{
                 @Override
                 public void onClick(View v) {
 
-                    String editTitle = title.getText().toString();
-                    String editDes = des.getText().toString();
+                    final String editTitle = title.getText().toString();
+                    final String editDes = des.getText().toString();
 
                     if (editTitle.equals("") || editTitle.equals("Need Title")) {
                         title.setTextColor(Color.parseColor("#8B0000"));
@@ -256,16 +270,17 @@ public class update_entry extends AppCompatActivity{
                     }
                     else {
 
-                        //get all the information in a HashMap
+                        //get all the information in a HashMap for firestore
                         final HashMap<String, Object> updateData = new HashMap<>();
                         updateData.put("title", editTitle);
                         updateData.put("category", category);
                         updateData.put("description", editDes);
                         updateData.put("flag", flagged);
                         updateData.put("date", DATE);
+                        updateData.put("timestamp", timestamp);
 
                         final String userEmail = data.get("email"); //get email from data hashMap in intent
-                        String ID = data.get("ID"); //get ID name of doc from data hashMap in intent
+                        final String ID = data.get("ID"); //get ID name of doc from data hashMap in intent
 
                         //update doc in database
                         //delete entry
@@ -278,9 +293,57 @@ public class update_entry extends AppCompatActivity{
                                 DocumentSnapshot document = task.getResult();
                                 if (document.exists()) {
                                     updateDoc.update(updateData);
+                                    //block below is for Algolia
+                                    Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+
+                                    final Index index = client.getIndex(userEmail);
+                                    List<JSONObject> array = new ArrayList<JSONObject>();
+
+                                    try {
+                                        array.add(
+                                                new JSONObject().put("title", editTitle).put("objectID", ID)
+                                        );
+                                        array.add(
+                                                new JSONObject().put("category", category).put("objectID", ID)
+                                        );
+                                        array.add(
+                                                new JSONObject().put("description", editDes).put("objectID", ID)
+                                        );
+                                        array.add(
+                                                new JSONObject().put("flag", flagged).put("objectID", ID)
+                                        );
+                                        array.add(
+                                                new JSONObject().put("date", DATE).put("objectID", ID)
+                                        );
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    index.partialUpdateObjectsAsync(new JSONArray(array),null);
+
                                 }
                                 else {
                                     db.collection(userEmail).add(updateData);
+
+                                    //block below is for Algolia
+                                    Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+
+                                    final Index index = client.getIndex(userEmail);
+
+                                    JSONObject object = null;
+                                    try {
+                                        object = new JSONObject()
+                                                .put("title", title)
+                                                .put("category", cat)
+                                                .put("description", des)
+                                                .put("flag", flagged)
+                                                .put("date", DATE);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    assert object != null;
+                                    index.addObjectAsync(object, ID, null);
                                 }
                             }
                         });
@@ -321,6 +384,11 @@ public class update_entry extends AppCompatActivity{
                     String M = String.valueOf(m);
                     String Y = String.valueOf(y);
                     DATE=M + "/" + D + "/" + Y;
+                    try {
+                        timestamp = DATEformat.parse(DATE);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
                 }
             });
 

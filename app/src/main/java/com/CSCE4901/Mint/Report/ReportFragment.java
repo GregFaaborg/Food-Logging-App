@@ -29,8 +29,10 @@ import com.google.firebase.firestore.QuerySnapshot;
 import com.leavjenn.smoothdaterangepicker.date.SmoothDateRangePickerFragment;
 import com.whiteelephant.monthpicker.MonthPickerDialog;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
 
@@ -150,9 +152,20 @@ public class ReportFragment extends Fragment {
                     {
                         //get start and end date
                         String startDate =  (++monthStart) + "/" + dayStart + "/" + yearStart;
-                        String endDate = (++monthEnd) + "/" + dayEnd + "/" + yearEnd;
+                        String endDate = (++monthEnd) + "/" + (++dayEnd) + "/" + yearEnd;
 
-                        dateRangeQuery(startDate, endDate);
+                        SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy", Locale.US);
+                        Date beginDate = new Date();
+                        Date lastDate = new Date();
+                        try {
+                            beginDate = DATEformat.parse(startDate);
+                            lastDate = DATEformat.parse(endDate);
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+
+
+                        dateRangeQuery(beginDate, lastDate, startDate, endDate);
                     }
                 });
 
@@ -180,14 +193,17 @@ public class ReportFragment extends Fragment {
                 //get first day of month
                 date.set(Calendar.DAY_OF_MONTH, date.getActualMinimum(Calendar.DAY_OF_MONTH));
                 String firstDayOfMonth = sdf.format(date.getTime());
+                Date beginDate = date.getTime();
 
                 //get last day of month
                 date.set(Calendar.DAY_OF_MONTH, date.getActualMaximum(Calendar.DAY_OF_MONTH));
+                date.add(Calendar.DATE, 1);
                 String lastDayOfMonth = sdf.format(date.getTime());
+                Date endDate = date.getTime();
 
                 //Toast.makeText(getContext(), firstDayOfMonth + " - " + lastDayOfMonth, Toast.LENGTH_SHORT).show();
 
-                dateRangeQuery(firstDayOfMonth, lastDayOfMonth);
+                dateRangeQuery(beginDate, endDate, firstDayOfMonth, lastDayOfMonth);
 
 
             }
@@ -200,16 +216,14 @@ public class ReportFragment extends Fragment {
                 .show();
     }
 
-    private void dateRangeQuery(final String begin, final String end){
-
-
+    private void dateRangeQuery(final Date beginDate, final Date endDate,final String begin, final String end){
 
         String email = getUserEmail();
 
         assert email != null;
         db.collection(email)
-                .whereGreaterThanOrEqualTo("date", begin)
-                .whereLessThanOrEqualTo("date", end)
+                .whereGreaterThanOrEqualTo("timestamp", beginDate)
+                .whereLessThanOrEqualTo("timestamp", endDate)
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
