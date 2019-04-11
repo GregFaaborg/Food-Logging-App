@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
 import com.algolia.search.saas.AlgoliaException;
@@ -63,6 +64,7 @@ public class SearchFragment extends Fragment {
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
         mRecyclerView.setAdapter(mAdapter);
+
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
