@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,22 @@ import android.widget.TextView;
 
 import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 
 import java.util.HashMap;
 import java.util.Map;
+
+import static android.content.ContentValues.TAG;
 
 public class UserFragment extends Fragment implements View.OnClickListener {
 
@@ -54,6 +62,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         last=view.findViewById(R.id.last);
         emailDB=view.findViewById(R.id.email);
         docEmail=view.findViewById(R.id.doc);
+        del=view.findViewById(R.id.delete_button);
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -93,7 +102,6 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         update.setOnClickListener(this);
 
         //delete account
-        del=view.findViewById(R.id.delete_button);
         del.setOnClickListener(this);
 
         return view;
@@ -104,7 +112,39 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
         switch (v.getId()) {
             case R.id.delete_button:
-                //delete account
+                //delete doc in user named of logged in user
+                DocumentReference userInfo = db.collection("users").document(email);
+                userInfo.delete();
+
+                db.collection(email).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                DocumentReference doc = db.collection(email).document(document.getId());
+                                doc.delete();
+
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                            }
+
+                        } else {
+                            Log.w(TAG, "Error getting documents.", task.getException());
+                        }
+                    }
+                });
+
+                //delete authentication
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                currentUser.delete()
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User account deleted. ");
+                                }
+                            }
+                        });
+
 
 
             case R.id.logout_button:
