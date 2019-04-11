@@ -12,6 +12,8 @@ import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
 import com.CSCE4901.Mint.update_entry;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -228,7 +230,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
 
+
+
                 String ID= mItems.get(position).id;
+
+                //remove from algolia
+                Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+                assert UserEmail != null;
+                Index index = client.getIndex(UserEmail);
+                index.deleteObjectAsync(ID, null);
 
                 //remove from recycler
                 mItems.remove(position);

@@ -20,12 +20,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -131,14 +136,33 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
 
                     //get email of signed in user
                     FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                    String UserEmail = currentUser.getEmail();
+                    assert currentUser != null;
+                    final String UserEmail = currentUser.getEmail();
 
-
-                    //save text views and flag button to database in user email collection
+                    assert UserEmail != null;
                     db.collection(UserEmail).add(data).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                         @Override
                         public void onSuccess(DocumentReference documentReference) {
                             Log.d("Create Entry", "DocumentSnapshot added with ID: " + documentReference.getId());
+
+                            Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+
+                            final Index index = client.getIndex(UserEmail);
+
+                            JSONObject object = null;
+                            try {
+                                object = new JSONObject()
+                                        .put("title", title)
+                                        .put("category", cat)
+                                        .put("description", des)
+                                        .put("flag", flagged)
+                                        .put("date", DATE);
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+
+                            assert object != null;
+                            index.addObjectAsync(object, documentReference.getId(), null);
                             Toast.makeText(getContext(), "Entry Added", Toast.LENGTH_SHORT).show();
                         }
                     }).addOnFailureListener(new OnFailureListener() {
