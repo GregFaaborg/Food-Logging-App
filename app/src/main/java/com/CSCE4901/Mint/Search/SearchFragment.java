@@ -14,17 +14,21 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.algolia.search.saas.AlgoliaException;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.CompletionHandler;
+import com.algolia.search.saas.Index;
+import com.algolia.search.saas.Query;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
-import com.jaredrummler.materialspinner.MaterialSpinner;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -40,13 +44,6 @@ public class SearchFragment extends Fragment {
     LinearLayoutManager mLayoutManager;
     SearchAdapter mAdapter;
     private ProgressDialog progressDialog;
-
-
-    MaterialSpinner materialSpinner;
-
-    //filter option title by default
-    String filterOption = "title";
-
 
     @Nullable
     @Override
@@ -66,17 +63,8 @@ public class SearchFragment extends Fragment {
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        materialSpinner = view.findViewById(R.id.options_spinner);
+        mRecyclerView.setAdapter(mAdapter);
 
-        materialSpinner.setItems("Title", "Category", "Description", "Date");
-        materialSpinner.setOnItemSelectedListener(new MaterialSpinner.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(MaterialSpinner view, int position, long id, Object item) {
-
-                //get filter option from spinner option dropdown
-                filterOption = item.toString().toLowerCase();
-            }
-        });
 
         searchView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -89,41 +77,57 @@ public class SearchFragment extends Fragment {
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {
-                //Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
-                searchView.clearFocus();
-                progressDialog.show();
-                Log.d(TAG, "onCreateView: in on query text submit");
-                firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
-                db.collection(UserEmail)
-                        .whereEqualTo(filterOption, s)
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                progressDialog.dismiss();
-                                if (task.isSuccessful()) {
-                                    ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
-                                        Log.d(TAG, document.getId() + " => " + document.getData());
-                                    }
-                                    mAdapter = new SearchAdapter(arrItems);
-                                    mRecyclerView.setAdapter(mAdapter);
-                                } else {
-                                    Log.w(TAG, "Error getting documents.", task.getException());
-                                }
-                            }
-                        });
-                return true;
+
+                return false;
             }
 
             @Override
-            public boolean onQueryTextChange(String s) {
+            public boolean onQueryTextChange(final String s) {
 
-                //Toast.makeText(getContext(), s, Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "onCreateView: in on query text change");
+                Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+
+                firebaseAuth = FirebaseAuth.getInstance();
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                assert currentUser != null;
+                String UserEmail = currentUser.getEmail();
+
+                assert UserEmail != null;
+                Index index = client.getIndex(UserEmail);
+
+                Query query = new Query(s)
+                        .setAttributesToRetrieve("title", "description", "date", "category", "flag")
+                        .setHitsPerPage(50);
+                index.searchAsync(query, new CompletionHandler() {
+                    @Override
+                    public void requestCompleted(JSONObject content, AlgoliaException error) {
+                        try {
+                            JSONArray hits = content.getJSONArray("hits");
+                            ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                            for (int i = 0; i < hits.length(); i++){
+                                JSONObject jsonObject = hits.getJSONObject(i);
+                                String cat = jsonObject.getString("category");
+                                String date = jsonObject.getString("date");
+                                String desc = jsonObject.getString("description");
+                                String flag = jsonObject.getString("flag");
+                                String title = jsonObject.getString("title");
+                                String ID = jsonObject.getString("objectID");
+
+                                SearchItem searchItem = new SearchItem(cat,date,desc,flag,title,ID);
+                                arrItems.add(searchItem);
+
+                                Log.d("Algolia", content.toString());
+                            }
+                            mAdapter = new SearchAdapter(arrItems);
+                            mRecyclerView.setAdapter(mAdapter);
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+
+
+                    }
+                });
                 return true;
             }
         });

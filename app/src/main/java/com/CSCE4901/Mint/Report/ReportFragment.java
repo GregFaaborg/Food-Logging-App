@@ -67,7 +67,7 @@ public class ReportFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
 
 
-        weekly = view.findViewById(R.id.weekly_report);
+        weekly = view.findViewById(R.id.custom_range_report);
         monthly = view.findViewById(R.id.monthly_report);
         favorites = view.findViewById(R.id.favorites_report);
 
@@ -215,6 +215,7 @@ public class ReportFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
 
+                        Log.d("Range", begin + " - " + end);
                         TemplatePDF templatePDF;
                         //constructor for PDF
                         templatePDF = new TemplatePDF(getContext());
@@ -227,6 +228,7 @@ public class ReportFragment extends Fragment {
                         if(task.isSuccessful()) {
                             for (QueryDocumentSnapshot document: Objects.requireNonNull(task.getResult())) {
 
+                                Log.d("Range", begin + " - " + end);
                                 Log.d("Month", document.getId() + " => " + document.getData());
                                 entryData.append("Title: ").append(document.getString("title")).append("\n");
                                 entryData.append("Date: ").append(document.getString("date")).append("\n");
@@ -239,6 +241,8 @@ public class ReportFragment extends Fragment {
 
                                 String finalEntryData = entryData.toString();
                                 templatePDF.addParagraph(finalEntryData);
+                                entryData.setLength(0);
+                                Log.d("finalEntryData", finalEntryData);
 
                             }
                             templatePDF.closeDocument();
@@ -247,7 +251,7 @@ public class ReportFragment extends Fragment {
                         else {
 
                             Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
-                            Log.d("Month", "Error getting documents: ", task.getException());
+                            Log.d("Date", "Error getting documents: ", task.getException());
                         }
                     }
                 });
@@ -302,6 +306,8 @@ public class ReportFragment extends Fragment {
                                 entryData.append("\n");
 
                                 String finalEntryData = entryData.toString();
+                                Log.d("finalEntryData", finalEntryData);
+                                entryData.setLength(0);
                                 templatePDF.addParagraph(finalEntryData);
 
 

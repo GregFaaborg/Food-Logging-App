@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
+import com.algolia.search.saas.Client;
+import com.algolia.search.saas.Index;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -135,6 +137,9 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 //delete authentication
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                assert currentUser != null;
+                String emailIndex = currentUser.getEmail();
+
                 currentUser.delete()
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -145,6 +150,12 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                             }
                         });
 
+                //delete index from algolia
+                Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
+                assert emailIndex != null;
+                Index index = client.getIndex(emailIndex);
+                index.clearIndexAsync(null);
+                client.deleteIndexAsync(emailIndex, null);
 
 
             case R.id.logout_button:

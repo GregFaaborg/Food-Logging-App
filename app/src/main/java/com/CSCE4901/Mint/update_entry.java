@@ -21,9 +21,11 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Objects;
 
 public class update_entry extends AppCompatActivity{
@@ -201,24 +203,13 @@ public class update_entry extends AppCompatActivity{
 
             //set date picker of calendar to OG date
             DATE=data.get("date");
-            String dateParts[] = DATE.split("/");
 
-            int month = Integer.parseInt(dateParts[0]);
-            int day = Integer.parseInt(dateParts[1]);
-            int year = Integer.parseInt(dateParts[2]);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.set(Calendar.MONTH, month);
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-            calendar.set(Calendar.YEAR, year);
-
-            long milliTime = calendar.getTimeInMillis();
-
-            CAL.setDate(milliTime, true,true);
-
-
-
-
+            try {
+                CAL.setDate(new SimpleDateFormat("M/dd/yyyy", Locale.US).parse(DATE).getTime(), true, true);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            
             //flag from OG entry
             final String tempFlag = data.get("flag");
             if(tempFlag.equals("1"))
