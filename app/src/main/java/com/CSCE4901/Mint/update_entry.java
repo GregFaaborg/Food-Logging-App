@@ -124,6 +124,8 @@ public class update_entry extends AppCompatActivity{
                             if(categoryTemp.equals("")) { //empty category do not sow custom
                                 customCategory.setVisibility(View.GONE);
                                 category = cat;// breakfast as category
+                                categoryTemp = "";
+                                customEnabled = false;
                             }
                             else { //show custom
                                 if(categoryTemp.equals("1")){
@@ -131,22 +133,30 @@ public class update_entry extends AppCompatActivity{
                                     parent.setSelection(arrayAdapter.getPosition("Lunch"));
                                     //category = customCategory.getText().toString();
                                     category=cat;
+                                    categoryTemp = "";
+                                    customEnabled = false;
                                 }
                                 if(categoryTemp.equals("2")) {
                                     customCategory.setVisibility(View.GONE);
                                     parent.setSelection(arrayAdapter.getPosition("Dinner"));
                                     category=cat;
+                                    categoryTemp = "";
+                                    customEnabled = false;
                                 }
                                 if(categoryTemp.equals("3")) {
                                     customCategory.setVisibility(View.GONE);
                                     parent.setSelection(arrayAdapter.getPosition("Snack"));
                                     category=cat;
+                                    categoryTemp = "";
+                                    customEnabled = false;
                                 }
                                 if(categoryTemp.equals("4")) {
                                     customCategory.setVisibility(View.VISIBLE);
                                     parent.setSelection(arrayAdapter.getPosition("Custom"));
                                     category = customCategory.getText().toString();
                                     categoryTemp = "";
+                                    customEnabled = true;
+
                                 }
                             }
                         }
@@ -154,6 +164,8 @@ public class update_entry extends AppCompatActivity{
                         {
                             customCategory.setVisibility(View.GONE);
                             category = cat;
+                            categoryTemp = "";
+                            customEnabled = false;
                         }
                     }
                 }
@@ -270,6 +282,10 @@ public class update_entry extends AppCompatActivity{
                     }
                     else {
 
+                        if(customEnabled==true)
+                        {
+                            category=customCategory.getText().toString();
+                        }
                         //get all the information in a HashMap for firestore
                         final HashMap<String, Object> updateData = new HashMap<>();
                         updateData.put("title", editTitle);
