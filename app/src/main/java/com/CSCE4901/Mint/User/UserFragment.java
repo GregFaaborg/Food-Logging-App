@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.CSCE4901.Mint.MainActivity;
 import com.CSCE4901.Mint.R;
@@ -156,6 +157,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 Index index = client.getIndex(emailIndex);
                 index.clearIndexAsync(null);
                 client.deleteIndexAsync(emailIndex, null);
+                Toast.makeText(getContext(), "Account Deleted", Toast.LENGTH_SHORT).show();
 
 
             case R.id.logout_button:
@@ -164,7 +166,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 Intent intent = new Intent(getActivity(), MainActivity.class);
                 getActivity().startActivity(intent);
                 getActivity().finish();
-
+                Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
                 break;
             case R.id.update_button:
@@ -190,6 +192,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 data.put("doctorEmail",docEMAIL);
 
                 db.collection("users").document(email).set(data);
+                Toast.makeText(getContext(), "Info Updated", Toast.LENGTH_SHORT).show();
 
         }
 

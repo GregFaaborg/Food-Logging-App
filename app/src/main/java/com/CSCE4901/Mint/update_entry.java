@@ -76,17 +76,17 @@ public class update_entry extends AppCompatActivity{
             Objects.requireNonNull(getSupportActionBar()).hide();
 
             //initialize buttons
-            Cancel = (Button) findViewById(R.id.cancel_button);
-            Update = (Button) findViewById(R.id.update_button);
+            Cancel =  findViewById(R.id.cancel_button);
+            Update = findViewById(R.id.update_button);
 
             //initialize editTexts
-            title = (EditText) findViewById(R.id.entry_title);
-            customCategory = (EditText) findViewById(R.id.custom_category);
-            customCategory2 = (EditText) findViewById(R.id.custom_category2);
-            des = (EditText) findViewById(R.id.entry_description);
+            title = findViewById(R.id.entry_title);
+            customCategory = findViewById(R.id.custom_category);
+            customCategory2 = findViewById(R.id.custom_category2);
+            des = findViewById(R.id.entry_description);
 
             //initialize image button
-            flag = (ImageButton) findViewById(R.id.flag);
+            flag = findViewById(R.id.flag);
 
             //initialize calendar view
             CAL=update_entry.this.findViewById(R.id.entry_calendar);
@@ -98,7 +98,7 @@ public class update_entry extends AppCompatActivity{
             final HashMap<String,String> data = (HashMap<String, String>) intent.getSerializableExtra("key");
 
             //initialize spinner
-            CAT= (Spinner) findViewById(R.id.entry_category);
+            CAT= findViewById(R.id.entry_category);
             final ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this,
                     R.array.categories, android.R.layout.simple_spinner_item);
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -107,12 +107,11 @@ public class update_entry extends AppCompatActivity{
             CAT.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    //customCategory2.setVisibility(View.GONE);//the last cat be gone from view
+
                     cat = parent.getItemAtPosition(position).toString();
-                    //customCategory2.setVisibility(View.GONE);
-                    //Toast.makeText(parent.getContext(), cat, Toast.LENGTH_SHORT).show();
+
                     if (cat.equals("Custom")){
-                        //customCategory2.setVisibility(View.GONE);
+
                         customCategory.setVisibility(View.VISIBLE);
                         customEnabled = true;
                         category = customCategory.getText().toString();
@@ -131,7 +130,6 @@ public class update_entry extends AppCompatActivity{
                                 if(categoryTemp.equals("1")){
                                     customCategory.setVisibility(View.GONE);
                                     parent.setSelection(arrayAdapter.getPosition("Lunch"));
-                                    //category = customCategory.getText().toString();
                                     category=cat;
                                     categoryTemp = "";
                                     customEnabled = false;
@@ -191,14 +189,12 @@ public class update_entry extends AppCompatActivity{
                 category = customCategory.getText().toString();
                 categoryTemp = "4";
                 customCategory.setVisibility(View.VISIBLE);
-                //customCategory2.setText(tempCat);
-                //customCategory2.setVisibility(View.VISIBLE);
+
             }
 
             if(tempCat.equals("Breakfast") || "Lunch".equals(tempCat)|| "Dinner".equals(tempCat) || "Snack".equals(tempCat))
             {
-                //Toast.makeText(update_entry.this, tempCat, Toast.LENGTH_LONG).show();
-                //category="";
+
                 categoryTemp = "";
                 customCategory.setText("");
                 customCategory.setVisibility(View.GONE);
