@@ -3,6 +3,10 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 
+
+def APPID = '"' + applicationID + '"' ?: '"Application ID error"'
+def APIKEY = '"' + apiKey + '"' ?: 'API key error'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -17,6 +21,8 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField 'String', 'applicationID', APPID
+            buildConfigField 'String', 'apiKey', APIKEY
         }
     }
 }
