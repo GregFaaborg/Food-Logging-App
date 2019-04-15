@@ -282,10 +282,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     }
 
-    @Override
-    public int getItemCount() {
-        return 0;
-    }
 
     /*public void go(int POS, HashMap<String, String> data) {
 
