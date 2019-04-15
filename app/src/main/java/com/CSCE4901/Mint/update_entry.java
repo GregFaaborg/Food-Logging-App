@@ -1,6 +1,7 @@
 package com.CSCE4901.Mint;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -374,7 +375,10 @@ public class update_entry extends AppCompatActivity{
                         startActivity(goIntent);
                         */
                         //onResumeFragments();
+                        SharedPreferences.Editor pref = update_entry.this.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                        pref.putInt("CHECK", 1);
                         finish();
+
 
 
                     }

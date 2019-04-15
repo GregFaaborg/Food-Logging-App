@@ -1,7 +1,6 @@
 package com.CSCE4901.Mint.Search;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
@@ -11,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
-import com.CSCE4901.Mint.update_entry;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,8 +31,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     String CAT;
     String DES;
     String FLAG;
+
+    int POS;
     //String DATE;
-    int editCHECK=0;
+    boolean editCHECK=false;
 
     public SearchAdapter(ArrayList itemList) {
         //mAdapter = adapter;
@@ -138,6 +138,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 //initialize Firebase Auth instance
                 firebaseAuth = FirebaseAuth.getInstance();
 
+                POS=position;
+                editCHECK = true;
+
                 //get email of signed in user
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
                 String UserEmail = currentUser.getEmail();
@@ -158,10 +161,23 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
 
                 //Intent newIntent = new Intent(SearchAdapter.this, );
-                Intent goIntent = new Intent(mContext, update_entry.class);
+                /*Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
-                mContext.startActivity(goIntent);
+                mContext.startActivity(goIntent);*/
 
+                //go(position,data);
+
+                SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
+                int CHECK = pref.getInt("CHECK", 0);
+
+                while(CHECK==0) {
+                    Toast.makeText(mContext, String.format("its 0"), Toast.LENGTH_SHORT).show();
+                    if(CHECK==1) {
+                        Toast.makeText(mContext, String.format("its 1"), Toast.LENGTH_SHORT).show();
+                        break;
+                    }
+                    CHECK=pref.getInt("CHECK",0);
+                }
 
                 //mAdapter.notifyDataSetChanged();
                 //int check = go(position);
@@ -266,21 +282,25 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
     }
 
-
-
     @Override
     public int getItemCount() {
-        return mItems.size();
+        return 0;
     }
 
-    /*public int go(int position) {
+    /*public void go(int POS, HashMap<String, String> data) {
+
+        SharedPreferences.Editor pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+        pref.putInt("CHECK", 0);
+
+        Intent goIntent = new Intent(mContext, update_entry.class);
+        goIntent.putExtra("key", data); //send data hashMap
+        mContext.startActivity(goIntent);
 
         SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
         int CHECK = pref.getInt("CHECK", 0);//
         //Toast.makeText(mContext, String.format("CHECK:  "+CHECK), Toast.LENGTH_SHORT).show();
 
         SearchAdapter.this.notifyDataSetChanged();
-        return 0;
 
     }*/
 
