@@ -64,7 +64,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
 
         //get item and concatenize with their appropriate option
-        String titleHolder="Title: "+mItems.get(position).title;
+        /*String titleHolder="Title: "+mItems.get(position).title;
         holder.mTitle.setText(titleHolder);//holder.mTitle.setText(mItems.get(position).title);
 
         //holder.mCat.setText(mItems.get(position).category);
@@ -75,7 +75,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         holder.mDescription.setText(desHolder);
 
         String dateHolder="Date: "+mItems.get(position).date;
-        holder.mDate.setText(dateHolder);
+        holder.mDate.setText(dateHolder);*/
 
         //String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
 
@@ -94,6 +94,19 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                     DocumentSnapshot document = task.getResult();
                     if(document.exists()) {
                         String FlagHolder=document.getString("flag");
+                        String titleHolder="Title: "+document.getString("title");
+                        holder.mTitle.setText(titleHolder);//holder.mTitle.setText(mItems.get(position).title);
+
+                        //holder.mCat.setText(mItems.get(position).category);
+                        String catHolder="Category: "+document.getString("category");
+                        holder.mCat.setText(catHolder);
+
+                        String desHolder="Description:\n"+document.getString("description");
+                        holder.mDescription.setText(desHolder);
+
+                        String dateHolder="Date: "+document.getString("date");
+                        holder.mDate.setText(dateHolder);
+
                         if(FlagHolder.equals("1")) {
                             //MAKE FLAG STAR YELLOW
 
