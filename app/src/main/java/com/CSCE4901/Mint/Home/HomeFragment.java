@@ -1,5 +1,7 @@
 package com.CSCE4901.Mint.Home;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -49,11 +51,15 @@ public class HomeFragment extends Fragment {
     LinearLayoutManager mLayoutManager;
     RecyclerView mRecyclerView;
     SearchAdapter mAdapter;
+    SearchAdapter newA;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_home, container, false); //connect to XML fragment_home
+        //saved=savedInstanceState;
+
 
 
         //set format to get the date
@@ -106,6 +112,7 @@ public class HomeFragment extends Fragment {
                 }
             }
         });
+
 
         //when date picker is change set the DATe to that chosen date
         CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -185,42 +192,88 @@ public class HomeFragment extends Fragment {
             }
         });
 
+
         return view;
     }
 
-
-    public void updatedList()
+    @Override
+    public void onResume()
     {
-        firebaseAuth = FirebaseAuth.getInstance();
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String UserEmail = currentUser.getEmail();
-        final ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+        super.onResume();
+        //Toast.makeText(getContext(), String.format("ON RESUME "), Toast.LENGTH_SHORT).show();
+        SharedPreferences editor = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE);
+        int check = editor.getInt("CHECK",0); //set as false aka not finished
+        //Toast.makeText(getContext(), String.format(" "+check), Toast.LENGTH_SHORT).show();
+        if(check==1) {
+            mAdapter=null;
+            FirebaseUser current = firebaseAuth.getCurrentUser();
+            String emailUser = current.getEmail();
+            //final ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
 
-        db.collection(UserEmail)
-                .whereEqualTo("date", pickedDate)
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
-                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"),document.getId()));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                            mAdapter =null;
-                            mAdapter = new SearchAdapter(arrItems);
-                            mRecyclerView.setAdapter(mAdapter);
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
+            db.collection(emailUser).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            itemsList.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
+                            //Toast.makeText(getContext(), String.format("FLAG: "+document.getString("flag")), Toast.LENGTH_SHORT).show();
+                            Log.d(TAG, document.getId() + " => " + document.getData());
                         }
-                    }
-                });
+                        mAdapter=null;
+                        mAdapter = new SearchAdapter(itemsList);
+                        mRecyclerView.setAdapter(mAdapter);
+                        mAdapter.notifyDataSetChanged();
 
-        //mItems.addAll(mItems);
-        mAdapter.notifyDataSetChanged();
+                    } else {
+                        Log.w(TAG, "Error getting documents.", task.getException());
+                    }
+                }
+            });
+        }
+        //newA.notifyDataSetChanged();
+        SharedPreferences.Editor edit = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE).edit();
+        edit.putInt("CHECK",0); //set as false aka not finished
+        edit.apply();
+
+        /*
+        //Toast.makeText(getContext(), String.format("ON RESUME "), Toast.LENGTH_SHORT).show();
+        SharedPreferences editor = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE);
+        int check = editor.getInt("CHECK",0); //set as false aka not finished
+        //Toast.makeText(getContext(), String.format(" "+check), Toast.LENGTH_SHORT).show();
+        if(check==1){
+            //Toast.makeText(getContext(), String.format("IT IS 1: "+check), Toast.LENGTH_SHORT).show();
+            //update
+            firebaseAuth = FirebaseAuth.getInstance();
+            FirebaseUser current = firebaseAuth.getCurrentUser();
+            String emailUser = current.getEmail();
+            final ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
+
+            db.collection(emailUser).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            itemsList.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                        }
+                        newA = null;
+                        newA = new SearchAdapter(itemsList);
+                        mRecyclerView.setAdapter(newA);
+                        newA.notifyDataSetChanged();
+                    } else {
+                        Log.w(TAG, "Error getting documents.", task.getException());
+                    }
+                }
+            });
+        }
+        //newA.notifyDataSetChanged();
+        SharedPreferences.Editor edit = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE).edit();
+        edit.putInt("CHECK",0); //set as false aka not finished
+        edit.apply();
+         */
     }
+
 
 }
 

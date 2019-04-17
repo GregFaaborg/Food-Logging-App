@@ -1,8 +1,10 @@
 package com.CSCE4901.Mint.Search;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +12,15 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
+import com.CSCE4901.Mint.update_entry;
 import com.algolia.search.saas.Client;
 import com.algolia.search.saas.Index;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -41,13 +48,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         mItems = itemList;
     }
 
-    public void updatedList(ArrayList<SearchItem> mItems)
-    {
-        mItems.clear();
-        mItems.addAll(mItems);
-        notifyDataSetChanged();
-    }
-
     @Override
     public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent, false);
@@ -62,9 +62,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
     @Override
     public void onBindViewHolder(final SearchViewHolder holder, final int position) {
 
-        SharedPreferences.Editor editor = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
-        editor.putInt("CHECK",0); //set as false aka not finished
-        editor.apply();
 
         //get item and concatenize with their appropriate option
         String titleHolder="Title: "+mItems.get(position).title;
@@ -80,24 +77,54 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
         String dateHolder="Date: "+mItems.get(position).date;
         holder.mDate.setText(dateHolder);
 
-        String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
+        //String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
 
-        //Toast.makeText(mContext, FlagHolder, Toast.LENGTH_SHORT).show();
+        //GET AND SET THE FLAG FROM THE DATABASE DIRECTLY
+        //initialize Firebase Auth instance
+        firebaseAuth = FirebaseAuth.getInstance();
+        //get email of signed in user
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+        String currentEmail = currentUser.getEmail();
+        String docID= mItems.get(position).id;
+        DocumentReference FLAG = db.collection(currentEmail).document(docID);
+        FLAG.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if(task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if(document.exists()) {
+                        String FlagHolder=document.getString("flag");
+                        if(FlagHolder.equals("1")) {
+                            //MAKE FLAG STAR YELLOW
 
-        if(FlagHolder.equals("1")) {
+                            holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
+                        }
+                        else {
+                            //MAKE FLAG STAR TO NORMAL DEFAULT COLOR
+                            holder.mFlag.setColorFilter(Color.parseColor("#696969"));
+                        }
+                    }
+                }
+            }
+        });
+
+
+        /*if(FlagHolder.equals("1")) {
             //MAKE FLAG STAR YELLOW
+
             holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
         }
         else {
             //MAKE FLAG STAR TO NORMAL DEFAULT COLOR
             holder.mFlag.setColorFilter(Color.parseColor("#696969"));
-        }
+        }*/
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                //Toast.makeText(mContext, String.format("%d", position + 1), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, String.format("Color: "+mItems.get(position).flag), Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -128,7 +155,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 //visible options button
                 holder.mOPT.setVisibility(View.VISIBLE);
 
-                //updatedList(mItems);
             }
         });
 
@@ -138,8 +164,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 //initialize Firebase Auth instance
                 firebaseAuth = FirebaseAuth.getInstance();
 
-                POS=position;
-                editCHECK = true;
+                SharedPreferences.Editor editor = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                editor.putInt("CHECK",0); //set as false aka not finished
+                editor.apply();
 
                 //get email of signed in user
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
@@ -161,76 +188,10 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
 
                 //Intent newIntent = new Intent(SearchAdapter.this, );
-                /*Intent goIntent = new Intent(mContext, update_entry.class);
-                goIntent.putExtra("key", data); //send data hashMap
-                mContext.startActivity(goIntent);*/
-
-                //go(position,data);
-
-                SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
-                int CHECK = pref.getInt("CHECK", 0);
-
-                while(CHECK==0) {
-                    Toast.makeText(mContext, String.format("its 0"), Toast.LENGTH_SHORT).show();
-                    if(CHECK==1) {
-                        Toast.makeText(mContext, String.format("its 1"), Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    CHECK=pref.getInt("CHECK",0);
-                }
-
-                //mAdapter.notifyDataSetChanged();
-                //int check = go(position);
-                /*SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
-                int CHECK=pref.getInt("CHECK",0);//
-                while(check!=CHECK)
-                {
-                    Toast.makeText(mContext, String.format("DIFF"), Toast.LENGTH_SHORT).show();
-                    if(check==CHECK) {
-                        Toast.makeText(mContext, String.format("SAME"), Toast.LENGTH_SHORT).show();
-                        break;
-                    }
-                    CHECK=pref.getInt("CHECK",0);
-                }*/
-
-
-/*
-                //Intent newIntent = new Intent(SearchAdapter.this, );
                 Intent goIntent = new Intent(mContext, update_entry.class);
                 goIntent.putExtra("key", data); //send data hashMap
                 mContext.startActivity(goIntent);
 
-                */
-                    /*Toast.makeText(mContext, String.format("CF: "+checkFinish), Toast.LENGTH_SHORT).show();
-                    if(checkFinish==1) {
-                            Toast.makeText(mContext, String.format("CF::" + checkFinish), Toast.LENGTH_SHORT).show();
-
-                        }
-                    else {
-                        mContext.startActivity(goIntent);
-                        checkFinish = prefs.getInt("CHECK",0); //get int
-                    }*/
-
-
-                /*Toast.makeText(mContext, String.format(""+UserEmail), Toast.LENGTH_SHORT).show();
-                DocumentReference DOC = db.collection(UserEmail).document(ID);
-                DOC.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    //If the user is able to get data from the database
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        DocumentSnapshot document = task.getResult();
-                        //Check if the document exists in the database
-                        final String DATE = document.getString("date");
-                        if (DATE.equals(date)) {
-                            Toast.makeText(mContext, String.format("" + DATE), Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(mContext, String.format(""+DATE+" NOT THE SAME DATE "+date), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });*/
-
-                //Toast.makeText(mContext, String.format(""+DATE), Toast.LENGTH_SHORT).show();
 
 
             }
@@ -247,6 +208,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 String UserEmail = currentUser.getEmail();
 
 
+                SharedPreferences.Editor editor = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                editor.putInt("CHECK",0); //set as false aka not finished
+                editor.apply();
 
                 String ID= mItems.get(position).id;
 
@@ -280,24 +244,15 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
             }
         }*/
 
+
     }
 
 
-    /*public void go(int POS, HashMap<String, String> data) {
 
-        SharedPreferences.Editor pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
-        pref.putInt("CHECK", 0);
+    @Override
+    public int getItemCount() {
+        return mItems.size();
+    }
 
-        Intent goIntent = new Intent(mContext, update_entry.class);
-        goIntent.putExtra("key", data); //send data hashMap
-        mContext.startActivity(goIntent);
-
-        SharedPreferences pref = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE);
-        int CHECK = pref.getInt("CHECK", 0);//
-        //Toast.makeText(mContext, String.format("CHECK:  "+CHECK), Toast.LENGTH_SHORT).show();
-
-        SearchAdapter.this.notifyDataSetChanged();
-
-    }*/
 
 }

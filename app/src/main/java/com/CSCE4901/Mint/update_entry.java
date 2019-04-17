@@ -98,6 +98,7 @@ public class update_entry extends AppCompatActivity{
             Intent intent = getIntent();
             final HashMap<String,String> data = (HashMap<String, String>) intent.getSerializableExtra("key");
 
+
             //initialize spinner
             CAT= findViewById(R.id.entry_category);
             final ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this,
@@ -363,17 +364,14 @@ public class update_entry extends AppCompatActivity{
 
                         //edit entry toast
                         Toast.makeText(update_entry.this, String.format("Updating Entry"), Toast.LENGTH_SHORT).show();
-
-                        //go back to home fragment
-                        //finish();
-                        /*Intent goIntent = new Intent(getApplicationContext(), OverviewActivity.class);
-                        goIntent.putExtra("check", 1); //send data hashMap
-                        startActivity(goIntent);
-                        */
-                        //onResumeFragments();
-                        SharedPreferences.Editor pref = update_entry.this.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
-                        pref.putInt("CHECK", 1);
+                        SharedPreferences.Editor editor = update_entry.this.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
+                        editor.putInt("CHECK",1); //set as true
+                        editor.apply();
+                        SharedPreferences ed = update_entry.this.getSharedPreferences("PreferencesName", MODE_PRIVATE);
+                        int check = ed.getInt("CHECK",0);
+                        //Toast.makeText(update_entry.this, String.format(" "+check), Toast.LENGTH_SHORT).show();
                         finish();
+
 
 
 

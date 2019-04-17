@@ -5,7 +5,7 @@ public class SearchItem {
     String date;
     String description;
     String flag;
-    String title;
+    public String title;
     String id;
 
     public String getCategory() {
@@ -32,5 +32,8 @@ public class SearchItem {
         this.flag = flag;
         this.title = title;
         this.id=ID;
+
+
     }
+
 }
