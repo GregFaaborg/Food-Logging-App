@@ -17,6 +17,8 @@ import com.google.firebase.auth.FirebaseAuthEmailException;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 
+import java.util.Objects;
+
 public class ForgotPassword extends AppCompatActivity {
 
     private TextInputLayout tilForgetPasswordEmail;
@@ -41,7 +43,7 @@ public class ForgotPassword extends AppCompatActivity {
 
     private boolean validateEmail() {
 
-        String email = tilForgetPasswordEmail.getEditText().getText().toString().trim();
+        String email = Objects.requireNonNull(tilForgetPasswordEmail.getEditText()).getText().toString().trim();
 
         if(email.isEmpty()) {
             tilForgetPasswordEmail.setError("Email Required");
@@ -59,7 +61,7 @@ public class ForgotPassword extends AppCompatActivity {
 
         } else {
 
-            String email = tilForgetPasswordEmail.getEditText().getText().toString().trim();
+            String email = Objects.requireNonNull(tilForgetPasswordEmail.getEditText()).getText().toString().trim();
 
             FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -76,7 +78,7 @@ public class ForgotPassword extends AppCompatActivity {
                             }
                             else {
                                 try {
-                                    throw task.getException();
+                                    throw Objects.requireNonNull(task.getException());
 
                                 } catch (FirebaseAuthEmailException e) {
 

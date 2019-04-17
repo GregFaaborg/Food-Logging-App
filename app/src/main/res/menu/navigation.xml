@@ -4,28 +4,28 @@
     <item
         android:id="@+id/navigation_home"
         android:icon="@drawable/ic_date_range_black_24dp"
-        android:title="Calendar" />
+        android:title="@string/calendar" />
 
     <item
         android:id="@+id/navigation_report"
         android:icon="@drawable/ic_assignment_black_24dp"
-        android:title="Report" />
+        android:title="@string/report" />
 
     <item
         android:id="@+id/navigation_entry"
         android:icon="@drawable/ic_add_black_24dp"
-        android:title="New Entry"
+        android:title="@string/new_entry"
         />
 
     <item
         android:id="@+id/navigation_search"
         android:icon="@drawable/ic_search_black_24dp"
-        android:title="Search" />
+        android:title="@string/search" />
 
     <item
         android:id="@+id/navigation_user"
         android:icon="@drawable/ic_person_black_24dp"
-        android:title="User Info" />
+        android:title="@string/user_info" />
 
 
 </menu>

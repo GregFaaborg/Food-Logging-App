@@ -2,14 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_relative_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F3F3"
     tools:context=".MainActivity">
 
     <LinearLayout
-        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -79,7 +76,7 @@
     </LinearLayout>
 
     <ImageView
-        android:id="@+id/imageView"
+        android:contentDescription="@string/mint_logo_des"
         android:layout_width="wrap_content"
         android:layout_height="266dp"
         android:layout_alignParentStart="true"

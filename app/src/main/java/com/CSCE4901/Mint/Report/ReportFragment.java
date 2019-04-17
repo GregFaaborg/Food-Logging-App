@@ -40,13 +40,7 @@ import java.util.Objects;
 
 public class ReportFragment extends Fragment {
 
-    View view;
-
-    Button weekly;
-    Button monthly;
-    Button favorites;
-
-    FirebaseFirestore db;
+    private FirebaseFirestore db;
 
     //for requesting permissions to access files
     private static final int REQUEST_CODE = 22;
@@ -62,23 +56,23 @@ public class ReportFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_report, container, false);
+        View view = inflater.inflate(R.layout.fragment_report, container, false);
 
 
         //get instance of firestore database
         db = FirebaseFirestore.getInstance();
 
 
-        weekly = view.findViewById(R.id.custom_range_report);
-        monthly = view.findViewById(R.id.monthly_report);
-        favorites = view.findViewById(R.id.favorites_report);
+        Button weekly = view.findViewById(R.id.custom_range_report);
+        Button monthly = view.findViewById(R.id.monthly_report);
+        Button favorites = view.findViewById(R.id.favorites_report);
 
         StrictMode.VmPolicy.Builder builder = new StrictMode.VmPolicy.Builder();
         StrictMode.setVmPolicy(builder.build());
 
 
         //ask permission for file access
-        if (!checkFilePermission()) {
+        if (filePermissionDenied()) {
             // Permission is not granted, so asking for permission
 
             askFilePermission();
@@ -88,7 +82,7 @@ public class ReportFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (!checkFilePermission()){
+                if (filePermissionDenied()){
                     askFilePermission();
                 }
                 else {
@@ -101,7 +95,7 @@ public class ReportFragment extends Fragment {
         monthly.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!checkFilePermission()){
+                if (filePermissionDenied()){
                     askFilePermission();
                 }
                 else {
@@ -114,7 +108,7 @@ public class ReportFragment extends Fragment {
             @Override
             public void onClick(View v) {
 
-                if (!checkFilePermission()){
+                if (filePermissionDenied()){
                     askFilePermission();
                 }
                 else {
@@ -347,10 +341,10 @@ public class ReportFragment extends Fragment {
     }
 
 
-    private boolean checkFilePermission(){
+    private boolean filePermissionDenied(){
 
         //returns true if file access permissions are allowed, false otherwise
-        return ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+        return ContextCompat.checkSelfPermission(Objects.requireNonNull(getContext()), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
     }
 
 }

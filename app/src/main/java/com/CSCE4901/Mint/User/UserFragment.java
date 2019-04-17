@@ -27,52 +27,50 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.itextpdf.text.Paragraph;
 
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
 public class UserFragment extends Fragment implements View.OnClickListener {
 
-    View view;
-    Button logOutButton;
-    Button update;
-    Button del;
-    TextView first;
-    TextView last;
-    TextView emailDB;
-    TextView docEmail;
+    private TextView first;
+    private TextView last;
+    private TextView emailDB;
+    private TextView docEmail;
 
-    String email;
-    String FIRST="first name";
-    String LAST="last name";
-    String docEMAIL="docs email";
+    private String email;
+    private String FIRST="first name";
+    private String LAST="last name";
+    private String docEMAIL="docs email";
 
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
+    private FirebaseAuth firebaseAuth;
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment_user, container, false);
+        View view = inflater.inflate(R.layout.fragment_user, container, false);
 
         //initialize textviews
-        first=view.findViewById(R.id.first);
-        last=view.findViewById(R.id.last);
-        emailDB=view.findViewById(R.id.email);
-        docEmail=view.findViewById(R.id.doc);
-        del=view.findViewById(R.id.delete_button);
+        first= view.findViewById(R.id.first);
+        last= view.findViewById(R.id.last);
+        emailDB= view.findViewById(R.id.email);
+        docEmail= view.findViewById(R.id.doc);
+        Button del = view.findViewById(R.id.delete_button);
 
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
 
         //get email of signed in user
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        email = currentUser.getEmail();
+        email = Objects.requireNonNull(currentUser).getEmail();
 
 
         //create a doc reference in the user collection to the email doc
@@ -97,11 +95,11 @@ public class UserFragment extends Fragment implements View.OnClickListener {
         });
 
         //logout
-        logOutButton = view.findViewById(R.id.logout_button);
+        Button logOutButton = view.findViewById(R.id.logout_button);
         logOutButton.setOnClickListener(this);
 
         //update
-        update=view.findViewById(R.id.update_button);
+        Button update = view.findViewById(R.id.update_button);
         update.setOnClickListener(this);
 
         //delete account
@@ -123,7 +121,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 DocumentReference doc = db.collection(email).document(document.getId());
                                 doc.delete();
 
@@ -164,7 +162,7 @@ public class UserFragment extends Fragment implements View.OnClickListener {
 
                 //send user to login screen
                 Intent intent = new Intent(getActivity(), MainActivity.class);
-                getActivity().startActivity(intent);
+                Objects.requireNonNull(getActivity()).startActivity(intent);
                 getActivity().finish();
                 Toast.makeText(getContext(), "Logged Out", Toast.LENGTH_SHORT).show();
                 FirebaseAuth.getInstance().signOut();
@@ -176,12 +174,10 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 db.collection("users").document(email).delete();
 
                 //get strings in from the text views
-                //email=emailDB.getText().toString();
+
                 FIRST=first.getText().toString();
                 LAST=last.getText().toString();
                 docEMAIL=docEmail.getText().toString();
-                //TOOOOO DOOOOO
-                //check if docEmail is valid in firebase auth
 
 
                 //get all the information in a HashMap
@@ -191,8 +187,18 @@ public class UserFragment extends Fragment implements View.OnClickListener {
                 //data.put("email", email);
                 data.put("doctorEmail",docEMAIL);
 
-                db.collection("users").document(email).set(data);
-                Toast.makeText(getContext(), "Info Updated", Toast.LENGTH_SHORT).show();
+                db.collection("users").document(email).set(data).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()){
+                            Toast.makeText(getContext(), "Info Updated", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getContext(), "Error Updating Info", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
         }
 

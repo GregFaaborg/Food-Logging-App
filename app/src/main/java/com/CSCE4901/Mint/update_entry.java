@@ -40,30 +40,23 @@ import java.util.Objects;
 
 public class update_entry extends AppCompatActivity{
 
-        Button Cancel;
-        Button Update;
+    private EditText title;
+        private EditText des;
 
-        EditText title;
-        EditText des;
+    private EditText customCategory;
+    private boolean customEnabled = false;
+        private String cat;
+        private String category;
+        private String categoryTemp;
 
-        Spinner CAT;
-        EditText customCategory;
-        EditText customCategory2;
-        boolean customEnabled = false;
-        String cat;
-        String category;
-        String categoryTemp;
+        private ImageButton flag;
+        private String flagged = "0";//default set to false
 
-        ImageButton flag;
-        String flagged = "0";//default set to false
+        private String DATE;
 
-        String DATE;
+        private Date timestamp;
 
-        Date timestamp;
-
-        CalendarView CAL;
-
-        FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
 
         @Override
@@ -72,25 +65,25 @@ public class update_entry extends AppCompatActivity{
             super.onCreate(savedInstanceState);
             setContentView(R.layout.update);//layout
             //set format to get the date
-            final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
+            final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy", Locale.US);
 
             Objects.requireNonNull(getSupportActionBar()).hide();
 
             //initialize buttons
-            Cancel =  findViewById(R.id.cancel_button);
-            Update = findViewById(R.id.update_button);
+            Button cancel = findViewById(R.id.cancel_button);
+            Button update = findViewById(R.id.update_button);
 
             //initialize editTexts
             title = findViewById(R.id.entry_title);
             customCategory = findViewById(R.id.custom_category);
-            customCategory2 = findViewById(R.id.custom_category2);
+
             des = findViewById(R.id.entry_description);
 
             //initialize image button
             flag = findViewById(R.id.flag);
 
             //initialize calendar view
-            CAL=update_entry.this.findViewById(R.id.entry_calendar);
+            CalendarView CAL = update_entry.this.findViewById(R.id.entry_calendar);
             Calendar now = Calendar.getInstance();
             CAL.setMaxDate(now.getTimeInMillis());
 
@@ -100,7 +93,7 @@ public class update_entry extends AppCompatActivity{
 
 
             //initialize spinner
-            CAT= findViewById(R.id.entry_category);
+            Spinner CAT = findViewById(R.id.entry_category);
             final ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(this,
                     R.array.categories, android.R.layout.simple_spinner_item);
             arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -185,14 +178,10 @@ public class update_entry extends AppCompatActivity{
 
             String tempCat = data.get("category");
 
-            if(!tempCat.equals("Breakfast") || !"Lunch".equals(tempCat)|| !"Dinner".equals(tempCat) || !"Snack".equals(tempCat))
-            {
-                customCategory.setText(tempCat);
-                category = customCategory.getText().toString();
-                categoryTemp = "4";
-                customCategory.setVisibility(View.VISIBLE);
-
-            }
+            customCategory.setText(tempCat);
+            category = customCategory.getText().toString();
+            categoryTemp = "4";
+            customCategory.setVisibility(View.VISIBLE);
 
             if(tempCat.equals("Breakfast") || "Lunch".equals(tempCat)|| "Dinner".equals(tempCat) || "Snack".equals(tempCat))
             {
@@ -226,6 +215,7 @@ public class update_entry extends AppCompatActivity{
             
             //flag from OG entry
             final String tempFlag = data.get("flag");
+            assert tempFlag != null;
             if(tempFlag.equals("1"))
             {
                 //change color to YELLOW
@@ -249,7 +239,7 @@ public class update_entry extends AppCompatActivity{
 
 
                     //if flag button is not pushed
-                    if(flagged == "0") {
+                    if(Objects.equals(flagged, "0")) {
                         //change color to YELLOW
                         flag.setColorFilter(Color.parseColor("#CCCC00"));
                         //FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
@@ -266,7 +256,7 @@ public class update_entry extends AppCompatActivity{
                 }
             });
 
-            Update.setOnClickListener(new View.OnClickListener() {
+            update.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -275,12 +265,12 @@ public class update_entry extends AppCompatActivity{
 
                     if (editTitle.equals("") || editTitle.equals("Need Title")) {
                         title.setTextColor(Color.parseColor("#8B0000"));
-                        title.setText("Need Title");
+                        title.setText(getString(R.string.Need_Title));
 
                     }
                     else {
 
-                        if(customEnabled==true)
+                        if(customEnabled)
                         {
                             category=customCategory.getText().toString();
                         }
@@ -300,18 +290,19 @@ public class update_entry extends AppCompatActivity{
                         //delete entry
                         //db.collection(userEmail).document(ID).delete();
                         //db.collection(userEmail).document(ID).set(updateData);
-                        final DocumentReference updateDoc = db.collection(userEmail).document(ID);
+                        final DocumentReference updateDoc = db.collection(Objects.requireNonNull(userEmail)).document(Objects.requireNonNull(ID));
                         updateDoc.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                             @Override
                             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                                 DocumentSnapshot document = task.getResult();
+                                assert document != null;
                                 if (document.exists()) {
                                     updateDoc.update(updateData);
                                     //block below is for Algolia
                                     Client client = new Client("SPV08Z7AV0", "adee0fbb15896a566a5ac1a39e322bb4");
 
                                     final Index index = client.getIndex(userEmail);
-                                    List<JSONObject> array = new ArrayList<JSONObject>();
+                                    List<JSONObject> array = new ArrayList<>();
 
                                     try {
                                         array.add(
@@ -363,7 +354,7 @@ public class update_entry extends AppCompatActivity{
                         });
 
                         //edit entry toast
-                        Toast.makeText(update_entry.this, String.format("Updating Entry"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(update_entry.this, "Updating Entry", Toast.LENGTH_SHORT).show();
                         SharedPreferences.Editor editor = update_entry.this.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
                         editor.putInt("CHECK",1); //set as true
                         editor.apply();
@@ -379,7 +370,7 @@ public class update_entry extends AppCompatActivity{
                 }
             });
 
-            Cancel.setOnClickListener(new View.OnClickListener() {
+            cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //go back to home fragment
@@ -390,13 +381,11 @@ public class update_entry extends AppCompatActivity{
             //when date picker is change set the DATe to that chosen date
             CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                 @Override
-                public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                    int d =dayOfMonth;
+                public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                     int m = month+1;
-                    int y = year;
-                    String D = String.valueOf(d);
+                    String D = String.valueOf(dayOfMonth);
                     String M = String.valueOf(m);
-                    String Y = String.valueOf(y);
+                    String Y = String.valueOf(year);
                     DATE=M + "/" + D + "/" + Y;
                     try {
                         timestamp = DATEformat.parse(DATE);

@@ -17,7 +17,6 @@
 
         <android.support.design.widget.TextInputEditText
             android:textColorHint="@android:color/black"
-            android:id="@+id/first_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -33,7 +32,6 @@
 
         <android.support.design.widget.TextInputEditText
             android:textColorHint="@android:color/black"
-            android:id="@+id/last_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="text"
@@ -49,7 +47,6 @@
 
         <android.support.design.widget.TextInputEditText
             android:textColorHint="@android:color/black"
-            android:id="@+id/user_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
@@ -66,7 +63,6 @@
 
         <android.support.design.widget.TextInputEditText
             android:textColorHint="@android:color/black"
-            android:id="@+id/user_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textPassword"

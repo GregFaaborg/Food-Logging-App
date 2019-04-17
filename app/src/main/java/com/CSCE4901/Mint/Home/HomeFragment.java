@@ -32,47 +32,44 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
 public class HomeFragment extends Fragment {
 
     //declare variables
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
-    View view;
-    String pickedDate;
-    String displayPickedDate;
-    CalendarView CAL;
-    ImageButton RE;
+    private String pickedDate;
+    private String displayPickedDate;
 
-    FirebaseFirestore db=FirebaseFirestore.getInstance(); //connect to firebase db
+    private final FirebaseFirestore db=FirebaseFirestore.getInstance(); //connect to firebase db
 
-    LinearLayoutManager mLayoutManager;
-    RecyclerView mRecyclerView;
-    SearchAdapter mAdapter;
-    SearchAdapter newA;
+    private RecyclerView mRecyclerView;
+    private SearchAdapter mAdapter;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_home, container, false); //connect to XML fragment_home
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
         //saved=savedInstanceState;
 
 
 
         //set format to get the date
-        final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
-        final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM d, yyyy");
+        final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy", Locale.US);
+        final SimpleDateFormat DATEformat2 = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
 
         //initialize calendar view
-        CAL = view.findViewById(R.id.home_calendar);
+        CalendarView CAL = view.findViewById(R.id.home_calendar);
         Calendar now = Calendar.getInstance();
         CAL.setMaxDate(now.getTimeInMillis());
 
         //refresh button initialize
-        RE = view.findViewById(R.id.RE);
+        ImageButton RE = view.findViewById(R.id.RE);
 
         //initialize Fire base Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
@@ -83,8 +80,8 @@ public class HomeFragment extends Fragment {
         final TextView displayDATE = view.findViewById(R.id.DATE);
         displayDATE.setText(displayPickedDate);
 
-        mRecyclerView = (RecyclerView) view.findViewById(R.id.homeRecycler);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        mRecyclerView = view.findViewById(R.id.homeRecycler);
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -92,14 +89,14 @@ public class HomeFragment extends Fragment {
 
         firebaseAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String UserEmail = currentUser.getEmail();
+        String UserEmail = Objects.requireNonNull(currentUser).getEmail();
 
-        db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+        db.collection(Objects.requireNonNull(UserEmail)).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if (task.isSuccessful()) {
-                    ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                    for (QueryDocumentSnapshot document : task.getResult()) {
+                    ArrayList<SearchItem> arrItems = new ArrayList<>();
+                    for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                         arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
                         Log.d(TAG, document.getId() + " => " + document.getData());
                     }
@@ -117,14 +114,12 @@ public class HomeFragment extends Fragment {
         //when date picker is change set the DATe to that chosen date
         CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(final CalendarView view, int year, int month, int dayOfMonth) {
+            public void onSelectedDayChange(@NonNull final CalendarView view, int year, int month, int dayOfMonth) {
 
-                int d = dayOfMonth;
                 int m = month + 1;
-                int y = year;
-                String D = String.valueOf(d);
+                String D = String.valueOf(dayOfMonth);
                 String M = String.valueOf(m);
-                String Y = String.valueOf(y);
+                String Y = String.valueOf(year);
                 pickedDate = M + "/" + D + "/" + Y;
                 displayPickedDate = DATEformat2.format(new Date(year - 1900, month, dayOfMonth));//displayPickedDate = M+","+D+","+Y;
                 displayDATE.setText(displayPickedDate);
@@ -134,14 +129,14 @@ public class HomeFragment extends Fragment {
 
                 firebaseAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
+                String UserEmail = Objects.requireNonNull(currentUser).getEmail();
 
-                db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                db.collection(Objects.requireNonNull(UserEmail)).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
-                            ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            ArrayList<SearchItem> arrItems = new ArrayList<>();
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
@@ -165,15 +160,15 @@ public class HomeFragment extends Fragment {
 
                 firebaseAuth = FirebaseAuth.getInstance();
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
-                final ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                String UserEmail = Objects.requireNonNull(currentUser).getEmail();
+                final ArrayList<SearchItem> arrItems = new ArrayList<>();
 
-                db.collection(UserEmail).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                db.collection(Objects.requireNonNull(UserEmail)).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             //ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                            for (QueryDocumentSnapshot document : task.getResult()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                                 arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                             }
@@ -201,21 +196,21 @@ public class HomeFragment extends Fragment {
     {
         super.onResume();
         //Toast.makeText(getContext(), String.format("ON RESUME "), Toast.LENGTH_SHORT).show();
-        SharedPreferences editor = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE);
+        SharedPreferences editor = Objects.requireNonNull(this.getActivity()).getSharedPreferences("PreferencesName", Context.MODE_PRIVATE);
         int check = editor.getInt("CHECK",0); //set as false aka not finished
         //Toast.makeText(getContext(), String.format(" "+check), Toast.LENGTH_SHORT).show();
         if(check==1) {
             mAdapter=null;
             FirebaseUser current = firebaseAuth.getCurrentUser();
-            String emailUser = current.getEmail();
+            String emailUser = Objects.requireNonNull(current).getEmail();
             //final ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
 
-            db.collection(emailUser).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            db.collection(Objects.requireNonNull(emailUser)).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                 @Override
                 public void onComplete(@NonNull Task<QuerySnapshot> task) {
                     if (task.isSuccessful()) {
-                        ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
-                        for (QueryDocumentSnapshot document : task.getResult()) {
+                        ArrayList<SearchItem> itemsList = new ArrayList<>();
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
                             itemsList.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
                             //Toast.makeText(getContext(), String.format("FLAG: "+document.getString("flag")), Toast.LENGTH_SHORT).show();
                             Log.d(TAG, document.getId() + " => " + document.getData());

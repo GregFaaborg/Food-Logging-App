@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -38,9 +39,6 @@ public class SignUpActivity extends AppCompatActivity {
     private FirebaseFirestore db;
 
     private ProgressDialog progressDialog;
-
-    private Button signUpButton;
-    private Button cancelButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,8 +53,8 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        signUpButton = findViewById(R.id.signup);
-        cancelButton = findViewById(R.id.cancel);
+        Button signUpButton = findViewById(R.id.signup);
+        Button cancelButton = findViewById(R.id.cancel);
 
 
         //progress for creating account
@@ -87,7 +85,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateFirstName() {
 
-        String firstName = tilFirstName.getEditText().getText().toString().trim();
+        String firstName = Objects.requireNonNull(tilFirstName.getEditText()).getText().toString().trim();
 
         if(firstName.isEmpty()) {
             tilFirstName.setError("Enter your first name");
@@ -101,7 +99,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateLastName() {
 
-        String lastName = tilLastName.getEditText().getText().toString().trim();
+        String lastName = Objects.requireNonNull(tilLastName.getEditText()).getText().toString().trim();
 
         if(lastName.isEmpty()) {
             tilLastName.setError("Enter your last name");
@@ -115,7 +113,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validateEmail() {
 
-        String email = tilEmail.getEditText().getText().toString().trim();
+        String email = Objects.requireNonNull(tilEmail.getEditText()).getText().toString().trim();
 
         if(email.isEmpty()){
             tilEmail.setError("Enter your email");
@@ -128,7 +126,7 @@ public class SignUpActivity extends AppCompatActivity {
 
     private boolean validatePassword() {
 
-        String password = tilPassword.getEditText().getText().toString().trim();
+        String password = Objects.requireNonNull(tilPassword.getEditText()).getText().toString().trim();
 
         if(password.isEmpty()) {
             tilPassword.setError("Enter your password");
@@ -145,10 +143,10 @@ public class SignUpActivity extends AppCompatActivity {
             return;
         } else {
 
-            final String firstName = tilFirstName.getEditText().getText().toString().trim();
-            final String lastName = tilLastName.getEditText().getText().toString().trim();
-            String email = tilEmail.getEditText().getText().toString().trim();
-            String password = tilPassword.getEditText().getText().toString().trim();
+            final String firstName = Objects.requireNonNull(tilFirstName.getEditText()).getText().toString().trim();
+            final String lastName = Objects.requireNonNull(tilLastName.getEditText()).getText().toString().trim();
+            String email = Objects.requireNonNull(tilEmail.getEditText()).getText().toString().trim();
+            String password = Objects.requireNonNull(tilPassword.getEditText()).getText().toString().trim();
 
 
 
@@ -229,7 +227,7 @@ public class SignUpActivity extends AppCompatActivity {
                             progressDialog.dismiss();
 
                             try {
-                                throw task.getException();
+                                throw Objects.requireNonNull(task.getException());
                                 
                             } catch (FirebaseAuthUserCollisionException existEmail) {
 

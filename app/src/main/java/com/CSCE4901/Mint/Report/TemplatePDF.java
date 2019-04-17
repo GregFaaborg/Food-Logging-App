@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.itextpdf.text.BaseColor;
@@ -24,7 +23,6 @@ import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,20 +33,20 @@ import java.util.Locale;
 
 
 
-public class TemplatePDF {
+class TemplatePDF {
 
-    private Context context;
+    private final Context context;
     private File pdfFile;
     private Document document;
     private Paragraph paragraph;
-    private Font fTitle = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
-    private Font fsubTitle = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
-    private Font fText = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-    private Font fHighText = new Font(Font.FontFamily.HELVETICA, 15, Font.BOLD);
+    private final Font fTitle = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD);
+    private final Font fsubTitle = new Font(Font.FontFamily.HELVETICA, 18, Font.BOLD);
+    private final Font fText = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+    private final Font fHighText = new Font(Font.FontFamily.HELVETICA, 15, Font.BOLD);
 
 
 
-    public TemplatePDF(Context context) {
+    TemplatePDF(Context context) {
         this.context = context;
     }
 
@@ -85,7 +83,7 @@ public class TemplatePDF {
     }
 
 
-    public void openDocument() {
+    void openDocument() {
         createFile();
 
         try {
@@ -99,11 +97,11 @@ public class TemplatePDF {
 
 
 
-    public void closeDocument(){
+    void closeDocument(){
         document.close();
     }
 
-    public void addMetaData(String title, String subject, String author) {
+    void addMetaData(String title, String subject, String author) {
         document.addTitle(title);
         document.addSubject(subject);
         document.addAuthor(author);
@@ -111,7 +109,7 @@ public class TemplatePDF {
 
     }
 
-    public void addTitles(String title, String subTitle, String date) {
+    void addTitles(String title, String subTitle, String date) {
 
         try {
             paragraph = new Paragraph();
@@ -141,7 +139,7 @@ public class TemplatePDF {
         paragraph.add(childParagraph);
     }
 
-    public void addParagraph(String text) {
+    void addParagraph(String text) {
 
         try {
             paragraph = new Paragraph(text, fText);
@@ -155,53 +153,7 @@ public class TemplatePDF {
         }
     }
 
-    public void createTable(String[] header, ArrayList<String[]> clients) {
-
-        try {
-        paragraph = new Paragraph();
-        paragraph.setFont(fText);
-        PdfPTable pdfPTable = new PdfPTable(header.length);
-        pdfPTable.setWidthPercentage(100);
-        PdfPCell pdfPCell;
-
-        int indexC = 0;
-
-        while (indexC < header.length) {
-            pdfPCell = new PdfPCell(new Phrase(header[indexC++],fsubTitle));
-            pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-            pdfPCell.setBackgroundColor(BaseColor.GREEN);
-            pdfPTable.addCell(pdfPCell);
-        }
-
-        for (int indexRow = 0; indexRow < clients.size(); indexRow++) {
-            String[] row = clients.get(indexRow);
-            for (indexC = 0; indexC < header.length; indexC++) {
-
-                pdfPCell = new PdfPCell(new Phrase(row[indexC]));
-                pdfPCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-                pdfPCell.setFixedHeight(40);
-                pdfPTable.addCell(pdfPCell);
-            }
-        }
-
-        paragraph.add(pdfPTable);
-        document.add(paragraph);
-
-        } catch (Exception e) {
-            Log.e("createTable", e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    public void viewPDF() {
-
-        /*
-        Intent intent = new Intent(context, ViewPDFActivity.class);
-        intent.putExtra("path", pdfFile.getAbsolutePath());
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        context.startActivity(intent);
-        */
-
+    void viewPDF() {
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setDataAndType(Uri.fromFile(pdfFile),"application/pdf");

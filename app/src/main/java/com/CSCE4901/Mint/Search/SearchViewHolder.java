@@ -3,24 +3,23 @@ package com.CSCE4901.Mint.Search;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.CSCE4901.Mint.R;
 
-public class SearchViewHolder extends RecyclerView.ViewHolder {
-    public TextView mTitle;
-    public TextView mDate;
-    public TextView mDescription;
-    public ImageView mFlag;
-    public TextView mCat;
-    public Button mEdit;
-    public Button mX;
-    public Button mDel;
-    public Button mOPT;
+class SearchViewHolder extends RecyclerView.ViewHolder {
+    final TextView mTitle;
+    final TextView mDate;
+    final TextView mDescription;
+    final ImageView mFlag;
+    final TextView mCat;
+    final Button mEdit;
+    final Button mX;
+    final Button mDel;
+    final Button mOPT;
 
-    public SearchViewHolder(View itemView) {
+    SearchViewHolder(View itemView) {
         super(itemView);
         mTitle =  itemView.findViewById(R.id.title);
         mDate =  itemView.findViewById(R.id.date);

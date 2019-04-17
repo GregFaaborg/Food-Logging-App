@@ -1,5 +1,6 @@
 package com.CSCE4901.Mint.Entry;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,7 +17,6 @@ import android.widget.CalendarView;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
@@ -37,57 +37,54 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
+import java.util.Objects;
 
 public class EntryFragment extends Fragment implements AdapterView.OnItemSelectedListener {
 
     //declare
-    FirebaseAuth firebaseAuth;
+    private FirebaseAuth firebaseAuth;
 
-    View view;
-    EditText TITLE;
+    private EditText TITLE;
 
-    TextView catText;
-    Spinner CAT;
-    EditText customCategory;
-    boolean customEnabled = false;
+    private Spinner CAT;
+    private EditText customCategory;
+    private boolean customEnabled = false;
 
 
-    EditText DES;
-    ImageButton FLAG;
-    Button SAVE;
-    CalendarView CAL;
+    private EditText DES;
+    private ImageButton FLAG;
 
-    String flagged = "0";//default set to false
-    String title;
-    String cat;
-    String des;
+    private String flagged = "0";//default set to false
+    private String title;
+    private String cat;
+    private String des;
 
-    String DATE;
+    private String DATE;
 
-    Date timestamp;
+    private Date timestamp;
 
-    FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_entry, container, false); //Connect the XML file with thi fragment
+        View view = inflater.inflate(R.layout.fragment_entry, container, false);
 
         //set format to get the date
-        final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy");
+        final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy", Locale.US);
 
         //initialize edittexts
         TITLE= view.findViewById(R.id.entry_title);
-        DES=view.findViewById(R.id.entry_description);
+        DES= view.findViewById(R.id.entry_description);
         customCategory = view.findViewById(R.id.custom_category);
 
-        //initialize textview
-        catText = view.findViewById(R.id.entry_category_text);
+
 
 
         //initialize spinner
         CAT= view.findViewById(R.id.entry_category);
-        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(getContext(),
+        ArrayAdapter<CharSequence> arrayAdapter = ArrayAdapter.createFromResource(Objects.requireNonNull(getContext()),
                 R.array.categories, android.R.layout.simple_spinner_item);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         CAT.setAdapter(arrayAdapter);
@@ -95,11 +92,11 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
 
 
         //initialize Buttons
-        FLAG=view.findViewById(R.id.flag);
-        SAVE=view.findViewById(R.id.entry_add_button);
+        FLAG= view.findViewById(R.id.flag);
+        Button SAVE = view.findViewById(R.id.entry_add_button);
 
         //initialize calendar view
-        CAL=view.findViewById(R.id.entry_calendar);
+        CalendarView CAL = view.findViewById(R.id.entry_calendar);
         Calendar now = Calendar.getInstance();
         CAL.setMaxDate(now.getTimeInMillis());
 
@@ -113,6 +110,7 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
         timestamp = new Date(CAL.getDate());
 
         SAVE.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("SetTextI18n")
             @Override
             public void onClick(View v) {
 
@@ -209,7 +207,7 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
             public void onClick(View v) {
 
                 //if flag button is not pushed
-                if(flagged == "0") {
+                if(Objects.equals(flagged, "0")) {
                     //change color to YELLOW
                     FLAG.setColorFilter(Color.parseColor("#CCCC00"));
                     //FLAG.setBackgroundColor(Color.parseColor("#CCCC00"));
@@ -229,13 +227,11 @@ public class EntryFragment extends Fragment implements AdapterView.OnItemSelecte
         //when date picker is change set the DATe to that chosen date
         CAL.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                int d =dayOfMonth;
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 int m = month+1;
-                int y = year;
-                String D = String.valueOf(d);
+                String D = String.valueOf(dayOfMonth);
                 String M = String.valueOf(m);
-                String Y = String.valueOf(y);
+                String Y = String.valueOf(year);
                 DATE=M + "/" + D + "/" + Y;
                 try {
                     timestamp = DATEformat.parse(DATE);

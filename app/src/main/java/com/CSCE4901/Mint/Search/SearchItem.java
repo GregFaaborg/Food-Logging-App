@@ -1,29 +1,12 @@
 package com.CSCE4901.Mint.Search;
 
 public class SearchItem {
-    String category;
-    String date;
-    String description;
-    String flag;
-    public String title;
-    String id;
-
-    public String getCategory() {
-        return category;
-    }
-    public String getDate() {
-        return date;
-    }
-    public String getDescription(){
-        return description;
-    }
-    public String getFlag(){
-        return flag;
-    }
-    public String getTitle(){
-        return title;
-    }
-    public  String getId() {return id;}
+    final String category;
+    final String date;
+    final String description;
+    final String flag;
+    public final String title;
+    final String id;
 
     public SearchItem(String category, String date, String description, String flag, String title, String ID) {
         this.category = category;

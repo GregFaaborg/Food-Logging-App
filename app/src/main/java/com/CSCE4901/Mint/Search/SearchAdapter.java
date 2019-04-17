@@ -25,74 +25,49 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import static android.content.Context.MODE_PRIVATE;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
-    private ArrayList<SearchItem> mItems;
+    private final ArrayList<SearchItem> mItems;
     private Context mContext;
-    FirebaseAuth firebaseAuth; //auth decleration
-    FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
-
-    String TITLE;
-    String CAT;
-    String DES;
-    String FLAG;
-
-    int POS;
-    //String DATE;
-    boolean editCHECK=false;
+    private FirebaseAuth firebaseAuth; //auth declaration
+    private final FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
 
     public SearchAdapter(ArrayList itemList) {
         //mAdapter = adapter;
         mItems = itemList;
     }
 
+    @NonNull
     @Override
-    public SearchViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.search_item, parent, false);
         mContext = parent.getContext();
-        SearchViewHolder holder = new SearchViewHolder(v);
 
 
-
-        return holder;
+        return new SearchViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(final SearchViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final SearchViewHolder holder, final int position) {
 
-
-        //get item and concatenize with their appropriate option
-        /*String titleHolder="Title: "+mItems.get(position).title;
-        holder.mTitle.setText(titleHolder);//holder.mTitle.setText(mItems.get(position).title);
-
-        //holder.mCat.setText(mItems.get(position).category);
-        String catHolder="Category: "+mItems.get(position).category;
-        holder.mCat.setText(catHolder);
-
-        String desHolder="Description:\n"+mItems.get(position).description;
-        holder.mDescription.setText(desHolder);
-
-        String dateHolder="Date: "+mItems.get(position).date;
-        holder.mDate.setText(dateHolder);*/
-
-        //String FlagHolder = mItems.get(position).flag; //get flag string from database stored in FlagHolder
 
         //GET AND SET THE FLAG FROM THE DATABASE DIRECTLY
         //initialize Firebase Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
         //get email of signed in user
         FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        String currentEmail = currentUser.getEmail();
+        String currentEmail = Objects.requireNonNull(currentUser).getEmail();
         String docID= mItems.get(position).id;
-        DocumentReference FLAG = db.collection(currentEmail).document(docID);
+        DocumentReference FLAG = db.collection(Objects.requireNonNull(currentEmail)).document(docID);
         FLAG.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
             @Override
             public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                 if(task.isSuccessful()) {
                     DocumentSnapshot document = task.getResult();
-                    if(document.exists()) {
+                    if(Objects.requireNonNull(document).exists()) {
                         String FlagHolder=document.getString("flag");
                         String titleHolder="Title: "+document.getString("title");
                         holder.mTitle.setText(titleHolder);//holder.mTitle.setText(mItems.get(position).title);
@@ -107,7 +82,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                         String dateHolder="Date: "+document.getString("date");
                         holder.mDate.setText(dateHolder);
 
-                        if(FlagHolder.equals("1")) {
+                        if(Objects.requireNonNull(FlagHolder).equals("1")) {
                             //MAKE FLAG STAR YELLOW
 
                             holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
@@ -120,17 +95,6 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 }
             }
         });
-
-
-        /*if(FlagHolder.equals("1")) {
-            //MAKE FLAG STAR YELLOW
-
-            holder.mFlag.setColorFilter(Color.parseColor("#CCCC00"));
-        }
-        else {
-            //MAKE FLAG STAR TO NORMAL DEFAULT COLOR
-            holder.mFlag.setColorFilter(Color.parseColor("#696969"));
-        }*/
 
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -183,7 +147,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
                 //get email of signed in user
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
+                String UserEmail = Objects.requireNonNull(currentUser).getEmail();
 
                 final String ID= mItems.get(position).id;
                 final String date = mItems.get(position).date;
@@ -218,7 +182,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
 
                 //get email of signed in user
                 FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = currentUser.getEmail();
+                String UserEmail = Objects.requireNonNull(currentUser).getEmail();
 
 
                 SharedPreferences.Editor editor = mContext.getSharedPreferences("PreferencesName", MODE_PRIVATE).edit();
@@ -241,22 +205,9 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchViewHolder> {
                 //delete entry
                 db.collection(UserEmail).document(ID).delete();
 
-                Toast.makeText(mContext, String.format("Deleting Entry"), Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "Deleting Entry", Toast.LENGTH_SHORT).show();
             }
         });
-
-        /*int CHECK=go(position);
-        while(CHECK!=1)
-        {
-            if(CHECK==1)
-            {
-                Toast.makeText(mContext, String.format("CHECK: "+CHECK), Toast.LENGTH_SHORT).show();
-            }
-            else {
-                CHECK=go(position);
-            }
-        }*/
-
 
     }
 

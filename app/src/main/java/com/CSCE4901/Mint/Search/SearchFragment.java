@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
 import com.algolia.search.saas.AlgoliaException;
@@ -37,13 +36,10 @@ import static android.content.ContentValues.TAG;
 
 public class SearchFragment extends Fragment {
 
-    FirebaseAuth firebaseAuth;
-    FirebaseFirestore db = FirebaseFirestore.getInstance(); //point db to the root directory of the database
+    private FirebaseAuth firebaseAuth;
     //private DatabaseReference mDatabase;
-    RecyclerView mRecyclerView;
-    LinearLayoutManager mLayoutManager;
-    SearchAdapter mAdapter;
-    private ProgressDialog progressDialog;
+    private RecyclerView mRecyclerView;
+    private SearchAdapter mAdapter;
 
     @Nullable
     @Override
@@ -52,12 +48,12 @@ public class SearchFragment extends Fragment {
 
         final SearchView searchView = view.findViewById(R.id.search);
 
-        progressDialog = new ProgressDialog(getContext());
+        ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Searching...");
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
 
         mRecyclerView = view.findViewById(R.id.search_results);
-        mLayoutManager = new LinearLayoutManager(getContext());
+        LinearLayoutManager mLayoutManager = new LinearLayoutManager(getContext());
         mLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -103,7 +99,7 @@ public class SearchFragment extends Fragment {
                     public void requestCompleted(JSONObject content, AlgoliaException error) {
                         try {
                             JSONArray hits = content.getJSONArray("hits");
-                            ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
+                            ArrayList<SearchItem> arrItems = new ArrayList<>();
                             for (int i = 0; i < hits.length(); i++){
                                 JSONObject jsonObject = hits.getJSONObject(i);
                                 String cat = jsonObject.getString("category");

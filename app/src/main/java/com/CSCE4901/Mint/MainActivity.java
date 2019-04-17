@@ -34,9 +34,6 @@ public class MainActivity extends AppCompatActivity {
     private TextInputLayout passwordLayout;
 
 
-    private TextView forgotPassword;
-
-
     private FirebaseAuth firebaseAuth;
 
 
@@ -57,14 +54,14 @@ public class MainActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login_button);
         Button signUpButton = findViewById(R.id.signup_button);
 
-        forgotPassword = findViewById(R.id.forgot_password);
+        TextView forgotPassword = findViewById(R.id.forgot_password);
 
         checkPlayServicesVersion();
 
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                validate(v);
+                validate();
             }
         });
 
@@ -90,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validateEmail() {
 
-        String email = emailLayout.getEditText().getText().toString().trim();
+        String email = Objects.requireNonNull(emailLayout.getEditText()).getText().toString().trim();
 
         if(email.isEmpty()) {
             emailLayout.setError("Enter your email");
@@ -103,7 +100,7 @@ public class MainActivity extends AppCompatActivity {
 
     private boolean validatePassword() {
 
-        String password = passwordLayout.getEditText().getText().toString().trim();
+        String password = Objects.requireNonNull(passwordLayout.getEditText()).getText().toString().trim();
 
         if(password.isEmpty()) {
             passwordLayout.setError("Enter your password");
@@ -116,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void validate(View view) {
+    private void validate() {
 
         if(!validateEmail() | !validatePassword()){
             return;
@@ -128,8 +125,8 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.show();
 
             //login user
-            String email = emailLayout.getEditText().getText().toString().trim();
-            String password = passwordLayout.getEditText().getText().toString().trim();
+            String email = Objects.requireNonNull(emailLayout.getEditText()).getText().toString().trim();
+            String password = Objects.requireNonNull(passwordLayout.getEditText()).getText().toString().trim();
 
             firebaseAuth.signInWithEmailAndPassword(email,password)
                     .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -192,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void showSnackIfOffline(){
+    private void showSnackIfOffline(){
         final boolean online = isOnline();
         runOnUiThread(new TimerTask() { //must run on main thread to update UI (show Snackbar), can be used only in Activity (FragmentActivity, AppCompatActivity...)
             @Override
@@ -206,10 +203,8 @@ public class MainActivity extends AppCompatActivity {
                         }
                     })
                             .show();
-                else{
-
                     //do nothing, continue like normal
-                }
+
             }
         });
     }
