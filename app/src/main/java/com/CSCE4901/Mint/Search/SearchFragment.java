@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.CSCE4901.Mint.R;
 import com.algolia.search.saas.AlgoliaException;
@@ -40,6 +41,7 @@ public class SearchFragment extends Fragment {
     //private DatabaseReference mDatabase;
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
+    private TextView noResultsText;
 
     @Nullable
     @Override
@@ -47,6 +49,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         final SearchView searchView = view.findViewById(R.id.search);
+        noResultsText = view.findViewById(R.id.noResults);
 
         ProgressDialog progressDialog = new ProgressDialog(getContext());
         progressDialog.setMessage("Searching...");
@@ -116,6 +119,7 @@ public class SearchFragment extends Fragment {
                             }
                             mAdapter = new SearchAdapter(arrItems);
                             mRecyclerView.setAdapter(mAdapter);
+                            NoResults();
 
                         } catch (JSONException e) {
                             e.printStackTrace();
@@ -131,6 +135,15 @@ public class SearchFragment extends Fragment {
         Log.d(TAG, "onCreateView: before return view");
 
         return view;
+    }
+
+    private void NoResults(){
+        if(mAdapter.getItemCount() == 0){
+            noResultsText.setVisibility(View.VISIBLE);
+        }
+        else {
+            noResultsText.setVisibility(View.INVISIBLE);
+        }
     }
 
 

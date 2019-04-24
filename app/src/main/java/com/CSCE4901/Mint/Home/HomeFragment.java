@@ -50,6 +50,8 @@ public class HomeFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private SearchAdapter mAdapter;
 
+    private TextView noResults;
+
 
     @Nullable
     @Override
@@ -57,7 +59,7 @@ public class HomeFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
         //saved=savedInstanceState;
 
-
+        noResults = view.findViewById(R.id.noResults);
 
         //set format to get the date
         final SimpleDateFormat DATEformat = new SimpleDateFormat("M/d/yyyy", Locale.US);
@@ -102,7 +104,9 @@ public class HomeFragment extends Fragment {
                     }
                     mAdapter = new SearchAdapter(arrItems);
                     mRecyclerView.setAdapter(mAdapter);
+                    NoResults();
                     mAdapter.notifyDataSetChanged();
+
 
                 } else {
                     Log.w(TAG, "Error getting documents.", task.getException());
@@ -143,6 +147,7 @@ public class HomeFragment extends Fragment {
                             mAdapter = null;
                             mAdapter = new SearchAdapter(arrItems);
                             mRecyclerView.setAdapter(mAdapter);
+                            NoResults();
                             mAdapter.notifyDataSetChanged();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -175,6 +180,7 @@ public class HomeFragment extends Fragment {
                             mAdapter = null;
                             mAdapter = new SearchAdapter(arrItems);
                             mRecyclerView.setAdapter(mAdapter);
+                            NoResults();
                             mAdapter.notifyDataSetChanged();
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
@@ -218,6 +224,7 @@ public class HomeFragment extends Fragment {
                         mAdapter=null;
                         mAdapter = new SearchAdapter(itemsList);
                         mRecyclerView.setAdapter(mAdapter);
+                        NoResults();
                         mAdapter.notifyDataSetChanged();
 
                     } else {
@@ -231,44 +238,16 @@ public class HomeFragment extends Fragment {
         edit.putInt("CHECK",0); //set as false aka not finished
         edit.apply();
 
-        /*
-        //Toast.makeText(getContext(), String.format("ON RESUME "), Toast.LENGTH_SHORT).show();
-        SharedPreferences editor = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE);
-        int check = editor.getInt("CHECK",0); //set as false aka not finished
-        //Toast.makeText(getContext(), String.format(" "+check), Toast.LENGTH_SHORT).show();
-        if(check==1){
-            //Toast.makeText(getContext(), String.format("IT IS 1: "+check), Toast.LENGTH_SHORT).show();
-            //update
-            firebaseAuth = FirebaseAuth.getInstance();
-            FirebaseUser current = firebaseAuth.getCurrentUser();
-            String emailUser = current.getEmail();
-            final ArrayList<SearchItem> itemsList = new ArrayList<SearchItem>();
 
-            db.collection(emailUser).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            itemsList.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                        }
-                        newA = null;
-                        newA = new SearchAdapter(itemsList);
-                        mRecyclerView.setAdapter(newA);
-                        newA.notifyDataSetChanged();
-                    } else {
-                        Log.w(TAG, "Error getting documents.", task.getException());
-                    }
-                }
-            });
-        }
-        //newA.notifyDataSetChanged();
-        SharedPreferences.Editor edit = this.getActivity().getSharedPreferences("PreferencesName", Context.MODE_PRIVATE).edit();
-        edit.putInt("CHECK",0); //set as false aka not finished
-        edit.apply();
-         */
     }
 
-
+    private void NoResults(){
+        if(mAdapter.getItemCount() == 0){
+            noResults.setVisibility(View.VISIBLE);
+        }
+        else {
+            noResults.setVisibility(View.INVISIBLE);
+        }
+    }
 }
 
