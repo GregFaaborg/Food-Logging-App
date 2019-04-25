@@ -55,34 +55,13 @@
         android:id="@+id/noResults"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/no_results"
+        android:text="@string/no_entries"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:layout_below="@id/DATE"
         android:layout_centerInParent="true"
         android:layout_marginTop="25dp"
-        android:visibility="invisible"/>
+        android:visibility="visible"
+        android:textColor="@color/colorPrimary"/>
 
-    <ImageButton
-        android:id="@+id/RE"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:layout_alignStart="@+id/DATE"
-        android:layout_alignEnd="@+id/DATE"
-        android:layout_alignBottom="@+id/DATE"
-        android:layout_marginStart="349dp"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="340dp"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:tint="@color/colorPrimaryDark"
-        app:srcCompat="@drawable/circle" />
-
-    <ImageView
-        android:layout_width="42dp"
-        android:layout_height="42dp"
-        android:layout_alignEnd="@+id/RE"
-        android:layout_alignBottom="@+id/RE"
-        android:layout_marginEnd="-2dp"
-        android:layout_marginBottom="0dp"
-        app:srcCompat="@drawable/refresh" />
 
 </RelativeLayout>

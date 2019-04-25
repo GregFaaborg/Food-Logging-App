@@ -39,6 +39,7 @@
     <string name="update_entry">Update Entry</string>
     <string name="Need_Title">Need Title</string>
     <string name="no_results">No Results</string>
+    <string name="no_entries">No Entries</string>
 
     <string-array name="categories">
         <item>Breakfast</item>

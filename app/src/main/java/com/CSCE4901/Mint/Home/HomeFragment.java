@@ -70,9 +70,6 @@ public class HomeFragment extends Fragment {
         Calendar now = Calendar.getInstance();
         CAL.setMaxDate(now.getTimeInMillis());
 
-        //refresh button initialize
-        ImageButton RE = view.findViewById(R.id.RE);
-
         //initialize Fire base Auth instance
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -159,39 +156,6 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        RE.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                firebaseAuth = FirebaseAuth.getInstance();
-                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-                String UserEmail = Objects.requireNonNull(currentUser).getEmail();
-                final ArrayList<SearchItem> arrItems = new ArrayList<>();
-
-                db.collection(Objects.requireNonNull(UserEmail)).whereEqualTo("date", pickedDate).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            //ArrayList<SearchItem> arrItems = new ArrayList<SearchItem>();
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                                arrItems.add(new SearchItem(document.getString("category"), document.getString("date"), document.getString("description"), document.getString("flag"), document.getString("title"), document.getId()));
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                            }
-                            mAdapter = null;
-                            mAdapter = new SearchAdapter(arrItems);
-                            mRecyclerView.setAdapter(mAdapter);
-                            NoResults();
-                            mAdapter.notifyDataSetChanged();
-                        } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                        }
-                    }
-                });
-
-                //mItems.addAll(mItems);
-                mAdapter.notifyDataSetChanged();
-            }
-        });
 
 
         return view;
