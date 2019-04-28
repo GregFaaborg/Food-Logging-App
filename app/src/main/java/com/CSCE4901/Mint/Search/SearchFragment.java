@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.CSCE4901.Mint.R;
 import com.algolia.search.saas.AlgoliaException;
@@ -100,32 +101,40 @@ public class SearchFragment extends Fragment {
                 index.searchAsync(query, new CompletionHandler() {
                     @Override
                     public void requestCompleted(JSONObject content, AlgoliaException error) {
-                        try {
-                            JSONArray hits = content.getJSONArray("hits");
-                            ArrayList<SearchItem> arrItems = new ArrayList<>();
-                            for (int i = 0; i < hits.length(); i++){
-                                JSONObject jsonObject = hits.getJSONObject(i);
-                                String cat = jsonObject.getString("category");
-                                String date = jsonObject.getString("date");
-                                String desc = jsonObject.getString("description");
-                                String flag = jsonObject.getString("flag");
-                                String title = jsonObject.getString("title");
-                                String ID = jsonObject.getString("objectID");
 
-                                SearchItem searchItem = new SearchItem(cat,date,desc,flag,title,ID);
-                                arrItems.add(searchItem);
+                        //no error occurred
+                        if (error == null){
+                            try {
+                                JSONArray hits = content.getJSONArray("hits");
+                                ArrayList<SearchItem> arrItems = new ArrayList<>();
+                                for (int i = 0; i < hits.length(); i++){
+                                    JSONObject jsonObject = hits.getJSONObject(i);
 
-                                Log.d("Algolia", content.toString());
+                                    String cat = jsonObject.getString("category");
+                                    String date = jsonObject.getString("date");
+                                    String desc = jsonObject.getString("description");
+                                    String flag = jsonObject.getString("flag");
+                                    String title = jsonObject.getString("title");
+                                    String ID = jsonObject.getString("objectID");
+
+                                    SearchItem searchItem = new SearchItem(cat,date,desc,flag,title,ID);
+                                    arrItems.add(searchItem);
+
+                                    Log.d("Algolia", content.toString());
+                                }
+                                mAdapter = new SearchAdapter(arrItems);
+                                mRecyclerView.setAdapter(mAdapter);
+                                NoResults();
+
+                            } catch (JSONException e) {
+                                e.printStackTrace();
                             }
-                            mAdapter = new SearchAdapter(arrItems);
-                            mRecyclerView.setAdapter(mAdapter);
-                            NoResults();
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
                         }
-
-
+                        //error did occur. Show toast and log error
+                        else {
+                            Toast.makeText(getContext(), "Error occurred. Try again later", Toast.LENGTH_LONG).show();
+                            Log.d("Algolia Error", error.toString());
+                        }
                     }
                 });
                 return true;
