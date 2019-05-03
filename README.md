@@ -4,7 +4,7 @@
 ![Sign Up Page](/Screenshots/SignUp.png?raw=true "Sign Up")
 ![Login Page](/Screenshots/Login.png?raw=true "Login")
 ![Create Entry Page](/Screenshots/Entry.png?raw=true "Create Entry")
-![Search Page/Screenshots](/Search.png?raw=true "Search")
+![Search Page](/Screenshots/Search.png?raw=true "Search")
 ![Calendar Page](/Screenshots/Calendar.png?raw=true "Calendar View")
 ![Reports Page](/Screenshots/Reports.png?raw=true "Reports Page")
 ![User Info Page](/Screenshots/UserInfo.png?raw=true "User Info")
